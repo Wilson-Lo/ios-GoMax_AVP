@@ -1,0 +1,40 @@
+PODS:
+  - CocoaAsyncSocket (7.6.4)
+  - CryptoSwift (1.3.0)
+  - DynamicBlurView (4.1.0)
+  - PopupDialog (1.1.1):
+    - DynamicBlurView (~> 4.0)
+  - RSSelectionMenu (6.1.0)
+  - SideMenu (6.4.8)
+  - SwiftSocket (2.0.2)
+
+DEPENDENCIES:
+  - CocoaAsyncSocket
+  - CryptoSwift (~> 1.0)
+  - PopupDialog (~> 1.1)
+  - RSSelectionMenu
+  - SideMenu
+  - SwiftSocket
+
+SPEC REPOS:
+  trunk:
+    - CocoaAsyncSocket
+    - CryptoSwift
+    - DynamicBlurView
+    - PopupDialog
+    - RSSelectionMenu
+    - SideMenu
+    - SwiftSocket
+
+SPEC CHECKSUMS:
+  CocoaAsyncSocket: 694058e7c0ed05a9e217d1b3c7ded962f4180845
+  CryptoSwift: 1283821600233bdbeb96d7b389c3288c3bf77211
+  DynamicBlurView: 58e18fae80bb614e34681a4486870e7d257b62e8
+  PopupDialog: 720c92befd8bc23c13442254945213db5612f149
+  RSSelectionMenu: dac4fa365e4bbd95c0eccd0b6ff51a623a22a1c6
+  SideMenu: 4a891be552d30bb6fa87ad404d62e485f8450c34
+  SwiftSocket: 6f4c9c63fbc5c1d61188936bb3c599fd546f40ae
+
+PODFILE CHECKSUM: 9c51e2e45b66a1585fbfe2f714ed48bb60384435
+
+COCOAPODS: 1.9.1

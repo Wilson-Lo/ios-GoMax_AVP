@@ -1,0 +1,6 @@
+framework module Pods_AVP_Controller_AVP_ControllerUITests {
+  umbrella header "Pods-AVP Controller-AVP ControllerUITests-umbrella.h"
+
+  export *
+  module * { export * }
+}

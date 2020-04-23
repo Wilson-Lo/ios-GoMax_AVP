@@ -3,10 +3,14 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7A65BA3901C547CBEBF6FDB1 /* Pods_AVP_Controller_AVP_ControllerUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C80CC265871EE363B7B28C40 /* Pods_AVP_Controller_AVP_ControllerUITests.framework */; };
+		8643F11824505870001E87AF /* CmdHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8643F11724505870001E87AF /* CmdHelper.swift */; };
+		8644E73324513B7800119072 /* CustomTableViewCellDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8644E73124513B7800119072 /* CustomTableViewCellDevice.swift */; };
+		8644E73424513B7800119072 /* CustomTableViewCellDevice.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8644E73224513B7800119072 /* CustomTableViewCellDevice.xib */; };
 		8654D8E4244FDA4900B5C342 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8654D8E3244FDA4900B5C342 /* AppDelegate.swift */; };
 		8654D8E6244FDA4900B5C342 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8654D8E5244FDA4900B5C342 /* SceneDelegate.swift */; };
 		8654D8E8244FDA4900B5C342 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8654D8E7244FDA4900B5C342 /* ViewController.swift */; };
@@ -14,6 +18,8 @@
 		8654D8ED244FDA4A00B5C342 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8654D8EC244FDA4A00B5C342 /* Assets.xcassets */; };
 		8654D8F0244FDA4A00B5C342 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8654D8EE244FDA4A00B5C342 /* LaunchScreen.storyboard */; };
 		8654D8FB244FDA4B00B5C342 /* AVP_ControllerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8654D8FA244FDA4B00B5C342 /* AVP_ControllerUITests.swift */; };
+		8654D906244FEEF500B5C342 /* ChangeSourceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8654D905244FEEF500B5C342 /* ChangeSourceViewController.swift */; };
+		F77F6D10A32A86EA615CAED6 /* Pods_AVP_Controller.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D9780BCA93681FD006F0D35 /* Pods_AVP_Controller.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -27,6 +33,11 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		28778D7823F5D310764918D8 /* Pods-AVP Controller.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AVP Controller.release.xcconfig"; path = "Target Support Files/Pods-AVP Controller/Pods-AVP Controller.release.xcconfig"; sourceTree = "<group>"; };
+		2D9780BCA93681FD006F0D35 /* Pods_AVP_Controller.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AVP_Controller.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		8643F11724505870001E87AF /* CmdHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CmdHelper.swift; sourceTree = "<group>"; };
+		8644E73124513B7800119072 /* CustomTableViewCellDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTableViewCellDevice.swift; sourceTree = "<group>"; };
+		8644E73224513B7800119072 /* CustomTableViewCellDevice.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomTableViewCellDevice.xib; sourceTree = "<group>"; };
 		8654D8E0244FDA4900B5C342 /* AVP Controller.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AVP Controller.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8654D8E3244FDA4900B5C342 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8654D8E5244FDA4900B5C342 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -38,6 +49,11 @@
 		8654D8F6244FDA4B00B5C342 /* AVP ControllerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "AVP ControllerUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8654D8FA244FDA4B00B5C342 /* AVP_ControllerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVP_ControllerUITests.swift; sourceTree = "<group>"; };
 		8654D8FC244FDA4B00B5C342 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8654D905244FEEF500B5C342 /* ChangeSourceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeSourceViewController.swift; sourceTree = "<group>"; };
+		C80CC265871EE363B7B28C40 /* Pods_AVP_Controller_AVP_ControllerUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AVP_Controller_AVP_ControllerUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D51B368A9B22F1558099A289 /* Pods-AVP Controller-AVP ControllerUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AVP Controller-AVP ControllerUITests.debug.xcconfig"; path = "Target Support Files/Pods-AVP Controller-AVP ControllerUITests/Pods-AVP Controller-AVP ControllerUITests.debug.xcconfig"; sourceTree = "<group>"; };
+		EA5AD383E404CE8A94C1D0AC /* Pods-AVP Controller-AVP ControllerUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AVP Controller-AVP ControllerUITests.release.xcconfig"; path = "Target Support Files/Pods-AVP Controller-AVP ControllerUITests/Pods-AVP Controller-AVP ControllerUITests.release.xcconfig"; sourceTree = "<group>"; };
+		F968D1926715C88586846A53 /* Pods-AVP Controller.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AVP Controller.debug.xcconfig"; path = "Target Support Files/Pods-AVP Controller/Pods-AVP Controller.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -45,6 +61,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F77F6D10A32A86EA615CAED6 /* Pods_AVP_Controller.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -52,18 +69,41 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7A65BA3901C547CBEBF6FDB1 /* Pods_AVP_Controller_AVP_ControllerUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		383ECF27E64E42EA84DD596E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2D9780BCA93681FD006F0D35 /* Pods_AVP_Controller.framework */,
+				C80CC265871EE363B7B28C40 /* Pods_AVP_Controller_AVP_ControllerUITests.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		48AC1DAEA1EE4A892FD1D90D /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				F968D1926715C88586846A53 /* Pods-AVP Controller.debug.xcconfig */,
+				28778D7823F5D310764918D8 /* Pods-AVP Controller.release.xcconfig */,
+				D51B368A9B22F1558099A289 /* Pods-AVP Controller-AVP ControllerUITests.debug.xcconfig */,
+				EA5AD383E404CE8A94C1D0AC /* Pods-AVP Controller-AVP ControllerUITests.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		8654D8D7244FDA4900B5C342 = {
 			isa = PBXGroup;
 			children = (
 				8654D8E2244FDA4900B5C342 /* AVP Controller */,
 				8654D8F9244FDA4B00B5C342 /* AVP ControllerUITests */,
 				8654D8E1244FDA4900B5C342 /* Products */,
+				48AC1DAEA1EE4A892FD1D90D /* Pods */,
+				383ECF27E64E42EA84DD596E /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -86,6 +126,10 @@
 				8654D8EC244FDA4A00B5C342 /* Assets.xcassets */,
 				8654D8EE244FDA4A00B5C342 /* LaunchScreen.storyboard */,
 				8654D8F1244FDA4A00B5C342 /* Info.plist */,
+				8654D905244FEEF500B5C342 /* ChangeSourceViewController.swift */,
+				8643F11724505870001E87AF /* CmdHelper.swift */,
+				8644E73124513B7800119072 /* CustomTableViewCellDevice.swift */,
+				8644E73224513B7800119072 /* CustomTableViewCellDevice.xib */,
 			);
 			path = "AVP Controller";
 			sourceTree = "<group>";
@@ -106,9 +150,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8654D8FF244FDA4B00B5C342 /* Build configuration list for PBXNativeTarget "AVP Controller" */;
 			buildPhases = (
+				274151434DB87C9AC54ABAA0 /* [CP] Check Pods Manifest.lock */,
 				8654D8DC244FDA4900B5C342 /* Sources */,
 				8654D8DD244FDA4900B5C342 /* Frameworks */,
 				8654D8DE244FDA4900B5C342 /* Resources */,
+				6953FF439E023408532CB450 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -123,9 +169,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 8654D902244FDA4B00B5C342 /* Build configuration list for PBXNativeTarget "AVP ControllerUITests" */;
 			buildPhases = (
+				CF35D872641217457938F5DD /* [CP] Check Pods Manifest.lock */,
 				8654D8F2244FDA4B00B5C342 /* Sources */,
 				8654D8F3244FDA4B00B5C342 /* Frameworks */,
 				8654D8F4244FDA4B00B5C342 /* Resources */,
+				2B108E3800793D584A2AF9F8 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -180,6 +228,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8644E73424513B7800119072 /* CustomTableViewCellDevice.xib in Resources */,
 				8654D8F0244FDA4A00B5C342 /* LaunchScreen.storyboard in Resources */,
 				8654D8ED244FDA4A00B5C342 /* Assets.xcassets in Resources */,
 				8654D8EB244FDA4900B5C342 /* Main.storyboard in Resources */,
@@ -195,6 +244,87 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		274151434DB87C9AC54ABAA0 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-AVP Controller-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		2B108E3800793D584A2AF9F8 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AVP Controller-AVP ControllerUITests/Pods-AVP Controller-AVP ControllerUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AVP Controller-AVP ControllerUITests/Pods-AVP Controller-AVP ControllerUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AVP Controller-AVP ControllerUITests/Pods-AVP Controller-AVP ControllerUITests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		6953FF439E023408532CB450 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AVP Controller/Pods-AVP Controller-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AVP Controller/Pods-AVP Controller-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AVP Controller/Pods-AVP Controller-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CF35D872641217457938F5DD /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-AVP Controller-AVP ControllerUITests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		8654D8DC244FDA4900B5C342 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -202,6 +332,9 @@
 			files = (
 				8654D8E8244FDA4900B5C342 /* ViewController.swift in Sources */,
 				8654D8E4244FDA4900B5C342 /* AppDelegate.swift in Sources */,
+				8643F11824505870001E87AF /* CmdHelper.swift in Sources */,
+				8654D906244FEEF500B5C342 /* ChangeSourceViewController.swift in Sources */,
+				8644E73324513B7800119072 /* CustomTableViewCellDevice.swift in Sources */,
 				8654D8E6244FDA4900B5C342 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -360,6 +493,7 @@
 		};
 		8654D900244FDA4B00B5C342 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = F968D1926715C88586846A53 /* Pods-AVP Controller.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -378,6 +512,7 @@
 		};
 		8654D901244FDA4B00B5C342 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 28778D7823F5D310764918D8 /* Pods-AVP Controller.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -396,6 +531,7 @@
 		};
 		8654D903244FDA4B00B5C342 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D51B368A9B22F1558099A289 /* Pods-AVP Controller-AVP ControllerUITests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -416,6 +552,7 @@
 		};
 		8654D904244FDA4B00B5C342 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = EA5AD383E404CE8A94C1D0AC /* Pods-AVP Controller-AVP ControllerUITests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;

@@ -1,0 +1,6 @@
+framework module Pods_AVP_Controller {
+  umbrella header "Pods-AVP Controller-umbrella.h"
+
+  export *
+  module * { export * }
+}
