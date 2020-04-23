@@ -1,4 +1,5 @@
 # Uncomment the next line to define a global platform for your project
+
 # platform :ios, '9.0'
 
 target 'AVP Controller' do
@@ -13,6 +14,7 @@ target 'AVP Controller' do
   pod 'CocoaAsyncSocket'
   pod 'PopupDialog', '~> 1.1'
   pod 'RSSelectionMenu'
+  pod 'Toast-Swift', '~> 5.0.1'
   # Pods for AVP Controller
 
   target 'AVP ControllerUITests' do

@@ -151,30 +151,30 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="Uls-8B-HMj">
-                                <rect key="frame" x="87.5" y="176" width="239" height="156"/>
+                                <rect key="frame" x="78.5" y="176" width="257" height="156"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="HDMI" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LP1-V6-nvQ" userLabel="HDMI">
-                                        <rect key="frame" x="0.0" y="0.0" width="239" height="23"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="257" height="23"/>
                                         <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="20"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="rw8-UH-Sc5">
-                                        <rect key="frame" x="0.0" y="39" width="239" height="32"/>
+                                    <segmentedControl opaque="NO" tag="102" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="rw8-UH-Sc5">
+                                        <rect key="frame" x="0.0" y="39" width="257" height="32"/>
                                         <segments>
                                             <segment title="Gerenal"/>
                                             <segment title="Genlock"/>
-                                            <segment title="Fastwitch"/>
+                                            <segment title="Fastswitch"/>
                                         </segments>
                                     </segmentedControl>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Resolution" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2XJ-mP-JOr" userLabel="HDMI">
-                                        <rect key="frame" x="0.0" y="86" width="239" height="23"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" tag="104" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Resolution" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2XJ-mP-JOr" userLabel="HDMI">
+                                        <rect key="frame" x="0.0" y="86" width="257" height="23"/>
                                         <fontDescription key="fontDescription" name="Helvetica" family="Helvetica" pointSize="20"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="rnN-PP-uUW">
-                                        <rect key="frame" x="0.0" y="125" width="239" height="32"/>
+                                    <segmentedControl opaque="NO" tag="103" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="rnN-PP-uUW">
+                                        <rect key="frame" x="0.0" y="125" width="257" height="32"/>
                                         <segments>
                                             <segment title="4k2k 60"/>
                                             <segment title="1080P 60"/>

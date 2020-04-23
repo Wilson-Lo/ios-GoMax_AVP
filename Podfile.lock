@@ -7,6 +7,7 @@ PODS:
   - RSSelectionMenu (6.1.0)
   - SideMenu (6.4.8)
   - SwiftSocket (2.0.2)
+  - Toast-Swift (5.0.1)
 
 DEPENDENCIES:
   - CocoaAsyncSocket
@@ -15,6 +16,7 @@ DEPENDENCIES:
   - RSSelectionMenu
   - SideMenu
   - SwiftSocket
+  - Toast-Swift (~> 5.0.1)
 
 SPEC REPOS:
   trunk:
@@ -25,6 +27,7 @@ SPEC REPOS:
     - RSSelectionMenu
     - SideMenu
     - SwiftSocket
+    - Toast-Swift
 
 SPEC CHECKSUMS:
   CocoaAsyncSocket: 694058e7c0ed05a9e217d1b3c7ded962f4180845
@@ -34,7 +37,8 @@ SPEC CHECKSUMS:
   RSSelectionMenu: dac4fa365e4bbd95c0eccd0b6ff51a623a22a1c6
   SideMenu: 4a891be552d30bb6fa87ad404d62e485f8450c34
   SwiftSocket: 6f4c9c63fbc5c1d61188936bb3c599fd546f40ae
+  Toast-Swift: 9b6a70f28b3bf0b96c40d46c0c4b9d6639846711
 
-PODFILE CHECKSUM: 9c51e2e45b66a1585fbfe2f714ed48bb60384435
+PODFILE CHECKSUM: 489beba484270cac0c0777fe64ef8a967ded2c93
 
 COCOAPODS: 1.9.1
