@@ -11,6 +11,7 @@
 		8643F11824505870001E87AF /* CmdHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8643F11724505870001E87AF /* CmdHelper.swift */; };
 		8644E73324513B7800119072 /* CustomTableViewCellDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8644E73124513B7800119072 /* CustomTableViewCellDevice.swift */; };
 		8644E73424513B7800119072 /* CustomTableViewCellDevice.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8644E73224513B7800119072 /* CustomTableViewCellDevice.xib */; };
+		865170BB2452B1AF00E66F2C /* DeviceListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 865170BA2452B1AF00E66F2C /* DeviceListViewController.swift */; };
 		8654D8E4244FDA4900B5C342 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8654D8E3244FDA4900B5C342 /* AppDelegate.swift */; };
 		8654D8E6244FDA4900B5C342 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8654D8E5244FDA4900B5C342 /* SceneDelegate.swift */; };
 		8654D8E8244FDA4900B5C342 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8654D8E7244FDA4900B5C342 /* ViewController.swift */; };
@@ -39,6 +40,7 @@
 		8643F11724505870001E87AF /* CmdHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CmdHelper.swift; sourceTree = "<group>"; };
 		8644E73124513B7800119072 /* CustomTableViewCellDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTableViewCellDevice.swift; sourceTree = "<group>"; };
 		8644E73224513B7800119072 /* CustomTableViewCellDevice.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomTableViewCellDevice.xib; sourceTree = "<group>"; };
+		865170BA2452B1AF00E66F2C /* DeviceListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceListViewController.swift; sourceTree = "<group>"; };
 		8654D8E0244FDA4900B5C342 /* AVP Controller.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "AVP Controller.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8654D8E3244FDA4900B5C342 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8654D8E5244FDA4900B5C342 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -133,6 +135,7 @@
 				8644E73124513B7800119072 /* CustomTableViewCellDevice.swift */,
 				8644E73224513B7800119072 /* CustomTableViewCellDevice.xib */,
 				86AC5583245183DD00232A80 /* SettingsViewController.swift */,
+				865170BA2452B1AF00E66F2C /* DeviceListViewController.swift */,
 			);
 			path = "AVP Controller";
 			sourceTree = "<group>";
@@ -337,6 +340,7 @@
 				8654D8E4244FDA4900B5C342 /* AppDelegate.swift in Sources */,
 				86AC5584245183DD00232A80 /* SettingsViewController.swift in Sources */,
 				8643F11824505870001E87AF /* CmdHelper.swift in Sources */,
+				865170BB2452B1AF00E66F2C /* DeviceListViewController.swift in Sources */,
 				8654D906244FEEF500B5C342 /* ChangeSourceViewController.swift in Sources */,
 				8644E73324513B7800119072 /* CustomTableViewCellDevice.swift in Sources */,
 				8654D8E6244FDA4900B5C342 /* SceneDelegate.swift in Sources */,

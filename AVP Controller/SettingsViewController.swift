@@ -7,7 +7,7 @@
 //
 
 import UIKit
-var currentDeviceIP : String!
+import Toast_Swift
 
 let key_server_ip = "avx_server_ip"
 
@@ -65,6 +65,29 @@ class SettingsViewController: UIViewController, UITextFieldDelegate{
         return newString.length <= maxLength
     }
     
+    //server ip text field can not be empty
+    func checkIPEmpty() -> Bool{
+        
+        if(self.ip_text_1 == nil || self.ip_text_1.text == ""){
+            return true
+        }
+        
+        if(self.ip_text_2 == nil || self.ip_text_2.text == ""){
+            return true
+        }
+        
+        if(self.ip_text_3 == nil || self.ip_text_3.text == ""){
+            return true
+        }
+        
+        if(self.ip_text_4 == nil || self.ip_text_4.text == ""){
+            return true
+        }
+        
+        return false
+    }
+    
+    
     @objc func dismissKeyboard() {
         //Causes the view (or one of its embedded text fields) to resign the first responder status.
         view.endEditing(true)
@@ -72,14 +95,18 @@ class SettingsViewController: UIViewController, UITextFieldDelegate{
     
     @IBAction func saveServerIP(sender: UIButton) {
         
-        var ip1: String = self.ip_text_1.text!
-        var ip2: String = self.ip_text_2.text!
-        var ip3: String = self.ip_text_3.text!
-        var ip4: String = self.ip_text_4.text!
-        
-        var new_server_ip = self.ip_text_1.text! + "." + self.ip_text_2.text! + "." + self.ip_text_3.text! + "." + self.ip_text_4.text!
-        
-        preferences.set(new_server_ip, forKey: key_server_ip)
+        if(!checkIPEmpty()){
+            var new_server_ip = self.ip_text_1.text! + "." + self.ip_text_2.text! + "." + self.ip_text_3.text! + "." + self.ip_text_4.text!
+            
+            preferences.set(new_server_ip, forKey: key_server_ip)
+            DispatchQueue.main.async() {
+                self.view.makeToast("Setup Server IP complete", duration: 3.0, position: .bottom)
+            }
+        }else{
+            DispatchQueue.main.async() {
+                self.view.makeToast("Server IP can not be empty", duration: 3.0, position: .bottom)
+            }
+        }
     }
 }
 

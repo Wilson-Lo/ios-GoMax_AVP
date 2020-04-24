@@ -1,67 +1,55 @@
 //
-//  ChangeSourceViewController.swift
+//  DeviceListViewController.swift
 //  AVP Controller
 //
-//  Created by 啟發電子 on 2020/4/22.
+//  Created by 啟發電子 on 2020/4/24.
 //  Copyright © 2020 gomax. All rights reserved.
 //
 
-import Foundation
 import UIKit
 import CocoaAsyncSocket
 import SwiftSocket
 import RSSelectionMenu
 import Toast_Swift
+import PopupDialog
 
-class ChangeSourceViewController: UIViewController, GCDAsyncSocketDelegate, UITableViewDataSource, UITableViewDelegate{
+
+class DeviceListViewController: UIViewController, GCDAsyncSocketDelegate, UITableViewDataSource, UITableViewDelegate{
     
-    
-    var mSocket:GCDAsyncSocket!
     var queueTCP: DispatchQueue!
+    var mSocket:GCDAsyncSocket!
+    let preferences = UserDefaults.standard
+    var alert: UIAlertController!
+    var isConnected = false
     var currentCmdNumber = 0
     let _1_cmd_mode_human = 1
     let _2_cmd_require_blueriver_api_2_19_0 = 2
     let _3_get_all_list = 3
-    let _4_change_source = 4
+    let _4_device_identity = 4
     var deviceList: Array<String> = []
-    var menu: RSSelectionMenu<String>!
-    var segmentedControlHDMI: UISegmentedControl!
-    var segmentedControlResolution: UISegmentedControl!
-    var lebalResolution: UILabel!
-    var currentHDMITYpe = CmdHelper.hdmi_gerenal
-    var currentResolutionType = CmdHelper.resolution_4k2k_60
-    var alert: UIAlertController!
-    var isConnected = false
-    let preferences = UserDefaults.standard
+    var receiveData: String = ""
+    var isLockRead: Bool = false
     
     @IBOutlet weak var tableDeviceList: UITableView!
     
-    
     override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        print("DeviceListViewController-viewDidLoad")
         self.alert = UIAlertController(title: nil, message: "Please wait...", preferredStyle: .alert)
-        self.segmentedControlHDMI = self.view.viewWithTag(102) as? UISegmentedControl
-        self.segmentedControlResolution = self.view.viewWithTag(103) as? UISegmentedControl
-        self.lebalResolution = self.view.viewWithTag(104) as? UILabel
-        self.tableDeviceList = self.view.viewWithTag(101) as? UITableView
+        self.tableDeviceList = self.view.viewWithTag(301) as? UITableView
         let nib = UINib(nibName: "CustomTableViewCellDevice", bundle: nil)
         self.tableDeviceList.register(nib, forCellReuseIdentifier: "CutomTableRowCell")
         self.tableDeviceList.delegate = self
-        self.segmentedControlHDMI.addTarget(self, action: #selector(HDMIChanged(_:)), for: .valueChanged)
-        self.segmentedControlResolution.addTarget(self, action: #selector(ResolutionChanged(_:)), for: .valueChanged)
-        self.segmentedControlResolution.isHidden = true
-        self.lebalResolution.isHidden = true
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        print("ChangeSourceViewController-viewDidAppear")
+    override func viewWillAppear(_ animated: Bool) {
+        print("DeviceListViewController-viewWillAppear")
         self.isConnected = false
-        self.queueTCP = DispatchQueue(label: "com.gofanco.tcp", qos: DispatchQoS.userInitiated)
         self.deviceList.removeAll()
         self.tableDeviceList.reloadData()
+        self.queueTCP = DispatchQueue(label: "com.gofanco.tcp", qos: DispatchQoS.userInitiated)
         if(preferences.value(forKey: key_server_ip) != nil){
             var fullIP = preferences.value(forKey: key_server_ip) as! String
+            print("ip = " + fullIP)
             queueTCP.async {
                 DispatchQueue.main.async {
                     self.showLoading()
@@ -71,7 +59,7 @@ class ChangeSourceViewController: UIViewController, GCDAsyncSocketDelegate, UITa
                 self.mSocket = GCDAsyncSocket(delegate: self, delegateQueue: DispatchQueue.main)
                 do {
                     
-                   try self.mSocket.connect(toHost: fullIP, onPort: 6970)
+                    try self.mSocket.connect(toHost: fullIP, onPort: 6970)
                     
                     
                     print("connect to device success")
@@ -91,33 +79,27 @@ class ChangeSourceViewController: UIViewController, GCDAsyncSocketDelegate, UITa
                 
             }
         }
-        
     }
     
     override func viewDidDisappear(_ animated: Bool) {
-        print("ChangeSourceViewController-viewDidDisappear")
+        print("DeviceListViewController-viewDidDisappear")
         queueTCP.async {
             if(self.mSocket != nil){
                 self.mSocket.disconnect()
                 self.mSocket = nil
             }
-          
         }
     }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-    }
-    
-    
-    func socketDidDisconnect(_ sock: GCDAsyncSocket, withError err: Error?) {
-        print("ChangeSourceViewController-socketDidDisconnect")
-        self.isConnected = false
+    func socket(_ sock: GCDAsyncSocket, didReceive trust: SecTrust, completionHandler: @escaping (Bool) -> Void) {
+        print("DeviceListViewController-didReceive")
     }
     
     func socket(_ sock: GCDAsyncSocket, didConnectToHost host: String, port: UInt16) {
-        print("ChangeSourceViewController-didConnectToHost")
+        print("DeviceListViewController-didConnectToHost")
         self.isConnected = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            self.closeLoading()
+        }
         queueTCP.async  {
             self.currentCmdNumber = self._1_cmd_mode_human
             self.mSocket.write((CmdHelper.cmd_human_mode.data(using: String.Encoding.utf8))!, withTimeout: -1, tag: 0)
@@ -125,8 +107,8 @@ class ChangeSourceViewController: UIViewController, GCDAsyncSocketDelegate, UITa
         }
     }
     
-    public func socket(_ sock: GCDAsyncSocket, didRead: Data, withTag tag:CLong){
-        print("ChangeSourceViewController-didRead")
+    func socket(_ sock: GCDAsyncSocket, didRead : Data, withTag tag: Int) {
+        print("DeviceListViewController-didRead")
         switch self.currentCmdNumber {
             
         case self._1_cmd_mode_human:
@@ -179,18 +161,11 @@ class ChangeSourceViewController: UIViewController, GCDAsyncSocketDelegate, UITa
             }
             break
             
-        case self._4_change_source:
-            print("_4_change_source")
-            print(String(decoding: didRead, as: UTF8.self))
-            let changeSource: ChangeSource = try! JSONDecoder().decode(ChangeSource.self, from: didRead)
-            if(changeSource.status == "PROCESSING"){
-                DispatchQueue.main.async {
-                    self.view.makeToast("Send successful ", duration: 3.0, position: .bottom)
-                }
-            }else{
-                DispatchQueue.main.async {
-                    self.view.makeToast("Send failed ", duration: 3.0, position: .bottom)
-                }
+        case self._4_device_identity:
+            print("_4_device_identity")
+            //print(didRead)
+            if(self.isLockRead && didRead != nil){
+                self.receiveData.append(String(decoding: didRead, as: UTF8.self))
             }
             break
             
@@ -198,7 +173,6 @@ class ChangeSourceViewController: UIViewController, GCDAsyncSocketDelegate, UITa
             print("default")
             break
         }
-        
     }
     
     private func showLoading(){
@@ -226,112 +200,63 @@ class ChangeSourceViewController: UIViewController, GCDAsyncSocketDelegate, UITa
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("click")
         print(indexPath.row)
-        DispatchQueue.main.async {
-            let selectedNames: [String] = []
-            // create menu with data source -> here [String]
+        
+        
+        queueTCP.async  {
+            self.currentCmdNumber = self._4_device_identity
+            let cmd = "get " + self.deviceList[indexPath.row] + " identity\n" //get device identity cmd
+            self.isLockRead = true //prepare to read server feedback
+            self.receiveData = "" //server feedback data
+            self.mSocket.write((cmd.data(using: String.Encoding.utf8))!, withTimeout: -1, tag: 0)//send cmd to server
             
-            self.menu = RSSelectionMenu(dataSource: self.deviceList) { (cell, name, indexPath) in
-                cell.textLabel?.text = name
+            DispatchQueue.main.async(){
+                self.showLoading()
             }
             
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                self.closeLoading()
+                self.isLockRead = false
+                var strDeviceInfo: String = ""
+                let device_info: DeviceInfo = try! JSONDecoder().decode(DeviceInfo.self, from: self.receiveData.data(using: .utf8)!)
+                strDeviceInfo.append(device_info.result.devices[0].identity.chipset_type + " (Chipset)\n")
+                strDeviceInfo.append(device_info.result.devices[0].identity.engine + " (Engine)\n")
+                strDeviceInfo.append(device_info.result.devices[0].identity.firmware_comment + "\n")
+                strDeviceInfo.append("VID - " + String(device_info.result.devices[0].identity.vendor_id) + " -- PID -" + String(device_info.result.devices[0].identity.product_id) + "\n")
+                strDeviceInfo.append(device_info.result.devices[0].nodes[0].status.ip.address)
+                self.showPopDialog(deviceID: self.deviceList[indexPath.row], deviceInfo: strDeviceInfo)
+            }
             
-            // provide selected items
-            self.menu.setSelectedItems(items: selectedNames) { (name, index, selected, selectedItems) in
-                
-                
-                self.currentCmdNumber = self._4_change_source
-                var cmd: String!
-                
-                switch self.currentHDMITYpe{
-                    
-                case CmdHelper.hdmi_gerenal:
-                    cmd = "join " + self.deviceList[index]  + ":HDMI:0 " + self.deviceList[indexPath.row] + ":HDMI:0\n"
-                    break
-                case CmdHelper.hdmi_genlock:
-                    cmd = "join " + self.deviceList[index]  + ":HDMI:0 " + self.deviceList[indexPath.row] + ":HDMI:0 genlock\n"
-                    break
-                    
-                case CmdHelper.hdmi_fastswitch:
-                    switch self.currentResolutionType{
-                        
-                    case CmdHelper.resolution_4k2k_60:
-                        cmd = "join " + self.deviceList[index]  + ":HDMI:0 " + self.deviceList[indexPath.row] + ":HDMI:0 fastswitch size 3840 2160 fps 60\n"
-                        break
-                    case CmdHelper.resolution_1080p_60:
-                        cmd = "join " + self.deviceList[index]  + ":HDMI:0 " + self.deviceList[indexPath.row] + ":HDMI:0 fastswitch size 1920 1080 fps 60\n"
-                        break
-                        
-                    case CmdHelper.resolution_720p_60:
-                        cmd = "join " + self.deviceList[index]  + ":HDMI:0 " + self.deviceList[indexPath.row] + ":HDMI:0 fastswitch size 1280 720 fps 60\n"
-                        break
-                        
-                    default:
-                        break
-                    }
-                    break
-                    
-                default:
+            while(true){
+                if(self.isLockRead){
+                    self.mSocket.readData(withTimeout: -1, tag: 0)
+                }else{
                     break
                 }
-                self.mSocket.write((cmd.data(using: String.Encoding.utf8))!, withTimeout: -1, tag: 0)
-                self.mSocket.readData(withTimeout: 2, tag: 0)
-                
-                
             }
-            
-            self.menu.show(from: self)
         }
-    }
-    
-    @objc func HDMIChanged(_ sender: UISegmentedControl){
-        print(sender.selectedSegmentIndex)
         
-        switch sender.selectedSegmentIndex{
-            
-        case CmdHelper.hdmi_gerenal:
-            self.segmentedControlResolution.isHidden = true
-            self.lebalResolution.isHidden = true
-            self.currentHDMITYpe = CmdHelper.hdmi_gerenal
-            break
-        case CmdHelper.hdmi_genlock:
-            self.segmentedControlResolution.isHidden = true
-            self.lebalResolution.isHidden = true
-            self.currentHDMITYpe = CmdHelper.hdmi_genlock
-            break
-            
-        case CmdHelper.hdmi_fastswitch:
-            self.segmentedControlResolution.isHidden = false
-            self.lebalResolution.isHidden = false
-            self.currentHDMITYpe = CmdHelper.hdmi_fastswitch
-            break
-            
-        default:
-            break
-        }
     }
     
-    
-    @objc func ResolutionChanged(_ sender: UISegmentedControl){
-        print(sender.selectedSegmentIndex)
-        switch sender.selectedSegmentIndex{
+    //show device info
+    func showPopDialog(deviceID: String, deviceInfo: String){
+        
+        // Create the dialog
+        let popup = PopupDialog(title: deviceID, message: deviceInfo, image: nil)
+        
+        // Create buttons
+        let buttonCancel = CancelButton(title: "Cancel") {
             
-        case CmdHelper.resolution_4k2k_60:
-            self.currentResolutionType = CmdHelper.resolution_4k2k_60
-            break
-        case CmdHelper.resolution_1080p_60:
-            self.currentResolutionType = CmdHelper.resolution_1080p_60
-            break
-            
-        case CmdHelper.resolution_720p_60:
-            self.currentResolutionType = CmdHelper.resolution_720p_60
-            break
-            
-        default:
-            break
         }
+        // Add buttons to dialog
+        // Alternatively, you can use popup.addButton(buttonOne)
+        // to add a single button
+        popup.addButtons([buttonCancel])
+        
+        // Present dialog
+        self.present(popup, animated: true, completion: nil)
     }
+    
     
     struct HumanMode: Decodable {
         let  status: String
@@ -358,6 +283,38 @@ class ChangeSourceViewController: UIViewController, GCDAsyncSocketDelegate, UITa
         let status: String!
     }
     
+    struct DeviceInfo: Decodable{
+        struct ResultDeviceInfo: Decodable{
+            let devices: [Devices]!
+        }
+        
+        struct Devices: Decodable{
+            let identity: Identity!
+            let nodes: [Nodes]!
+        }
+        
+        struct Nodes: Decodable {
+            let status: Status!
+        }
+        
+        struct Identity: Decodable{
+            let chipset_type: String!
+            let engine: String!
+            let firmware_comment: String!
+            let vendor_id: Int!
+            let product_id: Int!
+        }
+        
+        struct Status: Decodable{
+            let ip: IP!
+        }
+        
+        struct IP: Decodable{
+            let address: String!
+        }
+        
+        let status: String
+        let result: ResultDeviceInfo
+    }
+    
 }
-
-
