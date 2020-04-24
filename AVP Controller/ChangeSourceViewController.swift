@@ -34,6 +34,8 @@ class ChangeSourceViewController: UIViewController, GCDAsyncSocketDelegate, UITa
     var currentHDMITYpe = CmdHelper.hdmi_gerenal
     var currentResolutionType = CmdHelper.resolution_4k2k_60
     var alert: UIAlertController!
+    var isConnected = false
+    let preferences = UserDefaults.standard
     
     @IBOutlet weak var tableDeviceList: UITableView!
     
@@ -58,29 +60,40 @@ class ChangeSourceViewController: UIViewController, GCDAsyncSocketDelegate, UITa
     override func viewDidAppear(_ animated: Bool) {
         print("EDIDViewController-viewDidAppear")
         self.queueTCP = DispatchQueue(label: "com.gofanco.tcp", qos: DispatchQoS.userInitiated)
-        queueTCP.async {
-            DispatchQueue.main.async {
-                self.showLoading()
+        self.deviceList.removeAll()
+        self.tableDeviceList.reloadData()
+        if(preferences.value(forKey: key_server_ip) != nil){
+            var fullIP = preferences.value(forKey: key_server_ip) as! String
+            queueTCP.async {
+                DispatchQueue.main.async {
+                    self.showLoading()
+                }
+                // if(currentDeviceIP != nil){
+                
+                self.mSocket = GCDAsyncSocket(delegate: self, delegateQueue: DispatchQueue.main)
+                do {
+                    
+                    try self.mSocket.connect(toHost: fullIP, onPort: 6970)
+                    
+                    
+                    print("connect to device success")
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 4.5) {
+                        if(!self.isConnected){
+                            self.closeLoading()
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                                self.view.makeToast("Request timeout !", duration: 3.0, position: .bottom)
+                            }
+                        }
+                    }
+                    
+                } catch let error {
+                    print("error to connect device")
+                }
+                
+                
             }
-            // if(currentDeviceIP != nil){
-            
-            self.mSocket = GCDAsyncSocket(delegate: self, delegateQueue: DispatchQueue.main)
-            do {
-                
-                try self.mSocket.connect(toHost: "192.168.1.166", onPort: 6970)
-                
-                
-                print("connect to device success")
-                //                    DispatchQueue.main.async {
-                //                        self.closeLoading()
-                //                    }
-                
-            } catch let error {
-                print("error to connect device")
-            }
-            
-            
         }
+        
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -122,10 +135,12 @@ class ChangeSourceViewController: UIViewController, GCDAsyncSocketDelegate, UITa
     
     func socketDidDisconnect(_ sock: GCDAsyncSocket, withError err: Error?) {
         print("socketDidDisconnect")
+        self.isConnected = false
     }
     
     func socket(_ sock: GCDAsyncSocket, didConnectToHost host: String, port: UInt16) {
         print("didConnectToHost")
+        self.isConnected = true
         queueTCP.async  {
             self.currentCmdNumber = self._1_cmd_mode_human
             self.mSocket.write((CmdHelper.cmd_human_mode.data(using: String.Encoding.utf8))!, withTimeout: -1, tag: 0)
@@ -135,10 +150,6 @@ class ChangeSourceViewController: UIViewController, GCDAsyncSocketDelegate, UITa
     
     func socket(_ sock: GCDAsyncSocket, didReceive trust: SecTrust, completionHandler: @escaping (Bool) -> Void) {
         print("didReceive")
-    }
-    
-    func socket(_ sock: GCDAsyncSocket, didReadPartialDataOfLength partialLength: UInt, tag: Int) {
-        print("didReadPartialDataOfLength")
     }
     
     public func socket(_ sock: GCDAsyncSocket, didRead: Data, withTag tag:CLong){
@@ -179,6 +190,7 @@ class ChangeSourceViewController: UIViewController, GCDAsyncSocketDelegate, UITa
         case self._3_get_all_list:
             print("_3_get_all_list")
             print(String(decoding: didRead, as: UTF8.self))
+            self.deviceList.removeAll()
             let get_all_list: GetAllList = try! JSONDecoder().decode(GetAllList.self, from: didRead)
             print(get_all_list.result.devices.count)
             if(get_all_list.result.devices.count > 0){
@@ -291,7 +303,6 @@ class ChangeSourceViewController: UIViewController, GCDAsyncSocketDelegate, UITa
                 default:
                     break
                 }
-                print(cmd)
                 self.mSocket.write((cmd.data(using: String.Encoding.utf8))!, withTimeout: -1, tag: 0)
                 self.mSocket.readData(withTimeout: 2, tag: 0)
                 
