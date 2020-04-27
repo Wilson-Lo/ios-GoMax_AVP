@@ -25,6 +25,7 @@ class SettingsViewController: UIViewController, UITextFieldDelegate{
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         self.ip_text_1 = self.view.viewWithTag(201) as? UITextField
         self.ip_text_2 = self.view.viewWithTag(202) as? UITextField
         self.ip_text_3 = self.view.viewWithTag(203) as? UITextField
@@ -32,7 +33,6 @@ class SettingsViewController: UIViewController, UITextFieldDelegate{
         self.networkStackView = self.view.viewWithTag(101) as? UIStackView
         self.networkStackView.addBackground(color: .black)
         //save server ip
-        
         uITextFieldDelegate?.delegate = self
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard))
         view.addGestureRecognizer(tap)
@@ -94,17 +94,17 @@ class SettingsViewController: UIViewController, UITextFieldDelegate{
     }
     
     @IBAction func saveServerIP(sender: UIButton) {
-        
+    
         if(!checkIPEmpty()){
             var new_server_ip = self.ip_text_1.text! + "." + self.ip_text_2.text! + "." + self.ip_text_3.text! + "." + self.ip_text_4.text!
             
             preferences.set(new_server_ip, forKey: key_server_ip)
             DispatchQueue.main.async() {
-                self.view.makeToast("Setup Server IP complete", duration: 3.0, position: .bottom)
+                self.view.makeToast("Setup Server IP complete", duration: 3.0, position: .top)
             }
         }else{
             DispatchQueue.main.async() {
-                self.view.makeToast("Server IP can not be empty", duration: 3.0, position: .bottom)
+                self.view.makeToast("Server IP can not be empty", duration: 3.0, position: .top)
             }
         }
     }

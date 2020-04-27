@@ -30,6 +30,7 @@ class DeviceListViewController: UIViewController, GCDAsyncSocketDelegate, UITabl
     var receiveData: String = ""
     var isLockRead: Bool = false
     
+    private var checkConnectStatusWork: DispatchWorkItem?
     @IBOutlet weak var tableDeviceList: UITableView!
     
     override func viewDidLoad() {
@@ -43,6 +44,14 @@ class DeviceListViewController: UIViewController, GCDAsyncSocketDelegate, UITabl
     
     override func viewWillAppear(_ animated: Bool) {
         print("DeviceListViewController-viewWillAppear")
+        self.checkConnectStatusWork  = DispatchWorkItem(block: {
+            if(!self.isConnected){
+                self.closeLoading()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    self.view.makeToast("Request timeout !", duration: 2.0, position: .bottom)
+                }
+            }
+        })
         self.isConnected = false
         self.deviceList.removeAll()
         self.tableDeviceList.reloadData()
@@ -55,7 +64,7 @@ class DeviceListViewController: UIViewController, GCDAsyncSocketDelegate, UITabl
                     self.showLoading()
                 }
                 // if(currentDeviceIP != nil){
-                
+                self.mSocket = nil
                 self.mSocket = GCDAsyncSocket(delegate: self, delegateQueue: DispatchQueue.main)
                 do {
                     
@@ -63,22 +72,19 @@ class DeviceListViewController: UIViewController, GCDAsyncSocketDelegate, UITabl
                     
                     
                     print("connect to device success")
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                        if(!self.isConnected){
-                            self.closeLoading()
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                self.view.makeToast("Request timeout !", duration: 3.0, position: .bottom)
-                            }
-                        }
-                    }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: self.checkConnectStatusWork!)
                     
                 } catch let error {
                     print("error to connect device")
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: self.checkConnectStatusWork!)
                 }
                 
                 
             }
         }
+    }
+    func socket(_ sock: GCDAsyncSocket, didAcceptNewSocket newSocket: GCDAsyncSocket) {
+        print("DeviceListViewController-didAcceptNewSocket")
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -97,10 +103,7 @@ class DeviceListViewController: UIViewController, GCDAsyncSocketDelegate, UITabl
     func socket(_ sock: GCDAsyncSocket, didConnectToHost host: String, port: UInt16) {
         print("DeviceListViewController-didConnectToHost")
         self.isConnected = true
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            self.closeLoading()
-        }
-        queueTCP.async  {
+        self.queueTCP.asyncAfter(deadline: .now() + 0.5) {
             self.currentCmdNumber = self._1_cmd_mode_human
             self.mSocket.write((CmdHelper.cmd_human_mode.data(using: String.Encoding.utf8))!, withTimeout: -1, tag: 0)
             self.mSocket.readData(withTimeout: -1, tag: 0)
@@ -115,7 +118,7 @@ class DeviceListViewController: UIViewController, GCDAsyncSocketDelegate, UITabl
             print("_1_cmd_mode_human")
             let humanMode: HumanMode = try! JSONDecoder().decode(HumanMode.self, from: didRead)
             if(humanMode.status == "SUCCESS"){
-                queueTCP.async  {
+                self.queueTCP.async  {
                     self.currentCmdNumber = self._2_cmd_require_blueriver_api_2_19_0
                     self.mSocket.write((CmdHelper.cmd_require_blueriver_api_2_19_0.data(using: String.Encoding.utf8))!, withTimeout: -1, tag: 0)
                     self.mSocket.readData(withTimeout: 1, tag: 0)
@@ -133,8 +136,42 @@ class DeviceListViewController: UIViewController, GCDAsyncSocketDelegate, UITabl
             if(blueriver_api.status == "SUCCESS"){
                 print("initial successful")
                 self.currentCmdNumber = self._3_get_all_list
-                self.mSocket.write((CmdHelper.cmd_get_all_list.data(using: String.Encoding.utf8))!, withTimeout: -1, tag: 0)
-                self.mSocket.readData(withTimeout: 2, tag: 0)
+                self.deviceList.removeAll()
+                self.receiveData = ""
+                self.isLockRead = true
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                    self.isLockRead = false
+                    do {
+                        _ = try JSONSerialization.jsonObject(with: self.receiveData.data(using: .utf8)!)
+                        print("Valid Json")
+                        let get_all_list: GetAllList = try! JSONDecoder().decode(GetAllList.self, from: self.receiveData.data(using: .utf8)!)
+                        if(get_all_list.result.devices.count > 0){
+                            for index in get_all_list.result.devices{
+                                self.deviceList.append(index.device_id)
+                            }
+                            
+                            DispatchQueue.main.async {
+                                self.closeLoading()
+                                self.tableDeviceList.reloadData()
+                            }
+                        }
+                    } catch {
+                        print("Error deserializing JSON: \(error.localizedDescription)")
+                    }
+                    
+                    
+                }
+                self.queueTCP.async {
+                    self.mSocket.write((CmdHelper.cmd_get_all_list.data(using: String.Encoding.utf8))!, withTimeout: -1, tag: 0)
+                    while(true){
+                        if(self.isLockRead){
+                            self.mSocket.readData(withTimeout: -1, tag: 0)
+                        }else{
+                            break
+                        }
+                    }
+                }
             }else{
                 DispatchQueue.main.async {
                     self.closeLoading()
@@ -144,20 +181,8 @@ class DeviceListViewController: UIViewController, GCDAsyncSocketDelegate, UITabl
             
         case self._3_get_all_list:
             print("_3_get_all_list")
-            print(String(decoding: didRead, as: UTF8.self))
-            self.deviceList.removeAll()
-            let get_all_list: GetAllList = try! JSONDecoder().decode(GetAllList.self, from: didRead)
-            print(get_all_list.result.devices.count)
-            if(get_all_list.result.devices.count > 0){
-                for index in get_all_list.result.devices{
-                    self.deviceList.append(index.device_id)
-                    print(index.device_id)
-                }
-                
-                DispatchQueue.main.async {
-                    self.closeLoading()
-                    self.tableDeviceList.reloadData()
-                }
+            if(self.isLockRead && didRead != nil){
+                self.receiveData.append(String(decoding: didRead, as: UTF8.self))
             }
             break
             
