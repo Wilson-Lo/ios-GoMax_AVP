@@ -22,4 +22,12 @@ struct CmdHelper {
     static let resolution_4k2k_60 = 0;
     static let resolution_1080p_60 = 1;
     static let resolution_720p_60 = 2;
+    
+    static let hdmi_audio_type_1 = "HDMI audio (original audio from video subscription in)"
+    static let hdmi_audio_type_2 = "HDMI audio (stereo downmix)"
+    static let hdmi_audio_type_3 = "HDMI audio (all available channels)"
+    static let hdmi_audio_type_4 = "I2S audio subscription"
+    static let hdmi_audio_type_5 = "I2S audio local loop out"
+    static var hdmi_audio_array = [hdmi_audio_type_1, hdmi_audio_type_2, hdmi_audio_type_3, hdmi_audio_type_4, hdmi_audio_type_5]
+    
 }
