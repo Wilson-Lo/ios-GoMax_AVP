@@ -30,4 +30,12 @@ struct CmdHelper {
     static let hdmi_audio_type_5 = "I2S audio local loop out"
     static var hdmi_audio_array = [hdmi_audio_type_1, hdmi_audio_type_2, hdmi_audio_type_3, hdmi_audio_type_4, hdmi_audio_type_5]
     
+    static let i2s_audio_type_1 = "HDMI audio (stereo downmix) local loop out"
+    static let i2s_audio_type_2 = "HDMI audio (all chanmels) local loop out"
+    static let i2s_audio_type_3 = "I2S audio subscription(audio return channel)"
+    static var i2s_audio_array = [i2s_audio_type_1, i2s_audio_type_2, i2s_audio_type_3]
+    
+    static let usb_role_LOCAL = "LOCAL"
+    static let usb_role_REMOTE = "REMOTE"
+    static let usb_role_DISABLED = "DISABLED"
 }

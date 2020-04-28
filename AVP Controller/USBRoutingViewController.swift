@@ -1,8 +1,8 @@
 //
-//  I2SAudioViewController.swift
+//  USBRoutingViewController.swift
 //  AVP Controller
 //
-//  Created by 啟發電子 on 2020/4/24.
+//  Created by 啟發電子 on 2020/4/28.
 //  Copyright © 2020 gomax. All rights reserved.
 //
 
@@ -12,7 +12,7 @@ import RSSelectionMenu
 import Toast_Swift
 import RSSelectionMenu
 
-class I2SAudioViewController: UIViewController, GCDAsyncSocketDelegate{
+class USBRoutingViewController: UIViewController, GCDAsyncSocketDelegate{
     
     var mSocket:GCDAsyncSocket!
     var queueTCP: DispatchQueue!
@@ -23,40 +23,32 @@ class I2SAudioViewController: UIViewController, GCDAsyncSocketDelegate{
     let _2_cmd_require_blueriver_api_2_19_0 = 2
     let _3_get_all_list = 3
     let _4_get_device_settings = 4
-    let _5_set_I2S_output = 5
-    let _6_start_I2S_output = 6
-    let _7_stop_I2S_output = 7
-    let _8_leave_I2S_output = 8
-    let _9_change_source = 9
+    let _5_set_usb_role = 5
     var currentCmdNumber = 0// current send cnmd number
     var deviceList: Array<String> = []
     var receiveData: String = ""
     var isLockRead: Bool = false
     var bt_device_id: UIButton!
-    var bt_i2s_output: UIButton!
-    var bt_i2s_change_source: UIButton!
     var menu: RSSelectionMenu<String>!
     var userSelectedDeviceIndex = -1//recoed user select which device id
-    var userSelectedI2SAudioOutputIndex = 0
+    var userSelectedUSBRole = 0
+    var segmentedUSBRole: UISegmentedControl!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         self.alert = UIAlertController(title: nil, message: "Please wait...", preferredStyle: .alert)
-        self.bt_device_id = self.view.viewWithTag(501) as? UIButton
-        self.bt_i2s_output = self.view.viewWithTag(502) as? UIButton
-        self.bt_i2s_change_source = self.view.viewWithTag(503) as? UIButton
-        
+        self.bt_device_id = self.view.viewWithTag(601) as? UIButton
+        self.segmentedUSBRole = self.view.viewWithTag(602) as? UISegmentedControl
+        self.segmentedUSBRole.addTarget(self, action: #selector(USBRoleChanged(_:)), for: .valueChanged)
     }
     
     
     override func viewWillAppear(_ animated: Bool) {
-        print("I2SAudioViewController-viewDidAppear")
+        print("USBRoutingViewController-viewDidAppear")
         self.userSelectedDeviceIndex = -1
-        self.userSelectedI2SAudioOutputIndex = 0
+        self.userSelectedUSBRole = 0
         self.bt_device_id.setTitle("Select Device", for: .init())
-        self.bt_i2s_change_source.setTitle("Select Device", for: .init())
-        self.bt_i2s_output.setTitle(CmdHelper.i2s_audio_array[0], for: .init())
         self.queueTCP = DispatchQueue(label: "com.gofanco.tcp", qos: DispatchQoS.userInitiated)
         if(preferences.value(forKey: key_server_ip) != nil){
             var fullIP = preferences.value(forKey: key_server_ip) as! String
@@ -92,15 +84,55 @@ class I2SAudioViewController: UIViewController, GCDAsyncSocketDelegate{
     }
     
     
+    @objc func USBRoleChanged(_ sender: UISegmentedControl){
+        print(sender.selectedSegmentIndex)
+        
+        if(self.userSelectedDeviceIndex > -1){
+            DispatchQueue.main.async(){
+                self.showLoading()
+            }
+            var cmd = ""
+            switch sender.selectedSegmentIndex{
+                
+            case 0://local
+                self.userSelectedUSBRole = 0
+                cmd = "set " + self.deviceList[self.userSelectedDeviceIndex] + " usb role LOCAL\n"
+                break
+                
+            case 1://remote
+                self.userSelectedUSBRole = 1
+                cmd = "set " + self.deviceList[self.userSelectedDeviceIndex] + " usb role REMOTE\n"
+                break
+                
+            case 2://disabled
+                self.userSelectedUSBRole = 2
+                cmd = "set " + self.deviceList[self.userSelectedDeviceIndex] + " usb role DISABLED\n"
+                break
+                
+            default:
+                break
+            }
+            
+            self.queueTCP.async  {
+                self.currentCmdNumber = self._5_set_usb_role
+                self.mSocket.write((cmd.data(using: String.Encoding.utf8))!, withTimeout: -1, tag: 0)//send cmd to server
+                self.mSocket.readData(withTimeout: -1, tag: 0)
+            }
+        }else{
+            ShowToast(message:"Please select Device first !")
+        }
+        
+    }
+    
     
     func socketDidDisconnect(_ sock: GCDAsyncSocket, withError err: Error?) {
-        print("ChangeSourceViewController-socketDidDisconnect")
+        print("USBRoutingViewController-socketDidDisconnect")
         self.isConnected = false
     }
     
     
     func socket(_ sock: GCDAsyncSocket, didConnectToHost host: String, port: UInt16) {
-        print("I2SAudioViewController-didConnectToHost")
+        print("USBRoutingViewController-didConnectToHost")
         self.isConnected = true
         self.queueTCP.asyncAfter(deadline: .now() + 0.5) {
             print("send command")
@@ -111,7 +143,7 @@ class I2SAudioViewController: UIViewController, GCDAsyncSocketDelegate{
     }
     
     public func socket(_ sock: GCDAsyncSocket, didRead: Data, withTag tag:CLong){
-        print("I2SAudioViewController-didRead")
+        print("USBRoutingViewController-didRead")
         
         switch self.currentCmdNumber {
             
@@ -173,7 +205,6 @@ class I2SAudioViewController: UIViewController, GCDAsyncSocketDelegate{
                                 
                                 DispatchQueue.main.async {
                                     self.closeLoading()
-                                    
                                 }
                             }
                         } catch {
@@ -220,50 +251,19 @@ class I2SAudioViewController: UIViewController, GCDAsyncSocketDelegate{
             if(self.isLockRead && didRead != nil){
                 self.receiveData.append(String(decoding: didRead, as: UTF8.self))
             }
-            
             break
+            
             
         case self._4_get_device_settings:
             print("_4_get_device_settings")
             if(self.isLockRead && didRead != nil){
                 self.receiveData.append(String(decoding: didRead, as: UTF8.self))
             }
+            
             break
             
-        case self._5_set_I2S_output:
-            print("_5_set_I2S_output")
-            DispatchQueue.main.async(){
-                self.closeLoading()
-            }
-            feedBackUser(didRead: didRead)
-            break
-            
-        case self._6_start_I2S_output:
-            print("_6_start_I2S_output")
-            DispatchQueue.main.async(){
-                self.closeLoading()
-            }
-            feedBackUser(didRead: didRead)
-            break
-            
-        case self._7_stop_I2S_output:
-            print("_7_stop_I2S_output")
-            DispatchQueue.main.async(){
-                self.closeLoading()
-            }
-            feedBackUser(didRead: didRead)
-            break
-            
-        case self._8_leave_I2S_output:
-            print("_8_leave_I2S_output")
-            DispatchQueue.main.async(){
-                self.closeLoading()
-            }
-            feedBackUser(didRead: didRead)
-            break
-            
-        case self._9_change_source:
-            print("_9_change_source")
+        case self._5_set_usb_role:
+            print("_5_set_usb_role")
             DispatchQueue.main.async(){
                 self.closeLoading()
             }
@@ -279,6 +279,7 @@ class I2SAudioViewController: UIViewController, GCDAsyncSocketDelegate{
     
     //handler server feedback (processing)
     private func feedBackUser(didRead: Data){
+        
         
         var isJSONFormate = true
         
@@ -376,6 +377,11 @@ class I2SAudioViewController: UIViewController, GCDAsyncSocketDelegate{
     struct Nodes: Decodable{
         let type: String!
         let inputs:[Inputs]
+        let configuration: USBConfiguration!
+    }
+    
+    struct USBConfiguration: Decodable{
+        let role: String!
     }
     
     struct Inputs: Decodable {
@@ -426,52 +432,49 @@ class I2SAudioViewController: UIViewController, GCDAsyncSocketDelegate{
                     self.showLoading()
                 }
                 
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                     self.closeLoading()
                     self.isLockRead = false
                     // print(self.receiveData)
-                    
                     do {
                         _ = try JSONSerialization.jsonObject(with: self.receiveData.data(using: .utf8)!)
                         let device_settings: DeviceSettings = try! JSONDecoder().decode(DeviceSettings.self, from: self.receiveData.data(using: .utf8)!)
                         
                         for indexNodes in device_settings.result.devices[0].nodes{
                             
-                            print(indexNodes.self.type)
-                            if(indexNodes.self.type == "I2S_AUDIO_OUTPUT"){
+                            //  print(indexNodes.self.type)
+                            if(indexNodes.self.type == "USB_HID"){
+                                print(indexNodes.configuration.role)
                                 
-                                for indexInputs in indexNodes.self.inputs{
-                                    print(indexInputs.name)
-                                    if(indexInputs.name == "main"){
-                                        print(indexInputs.configuration.source.value)
-                                        switch indexInputs.configuration.source.value{
-                                        case 6:
-                                            self.userSelectedI2SAudioOutputIndex = 0
-                                            self.bt_i2s_output.setTitle(CmdHelper.i2s_audio_array[0], for: .init())
-                                            break
-                                            
-                                        case 7:
-                                            self.userSelectedI2SAudioOutputIndex = 1
-                                            self.bt_i2s_output.setTitle(CmdHelper.i2s_audio_array[1], for: .init())
-                                            break
-                                            
-                                        case 8:
-                                            self.userSelectedI2SAudioOutputIndex = 2
-                                            self.bt_i2s_output.setTitle(CmdHelper.i2s_audio_array[2], for: .init())
-                                            break
-                                        default:
-                                            break
-                                        }
-                                    }
+                                switch indexNodes.configuration.role{
+                                    
+                                    
+                                case CmdHelper.usb_role_LOCAL:
+                                    self.segmentedUSBRole.selectedSegmentIndex = 0
+                                    break
+                                    
+                                case CmdHelper.usb_role_REMOTE:
+                                    self.segmentedUSBRole.selectedSegmentIndex = 1
+                                    break
+                                    
+                                    
+                                case CmdHelper.usb_role_DISABLED:
+                                    self.segmentedUSBRole.selectedSegmentIndex = 2
+                                    break
+                                    
+                                default:
+                                    
+                                    break
+                                    
                                 }
+                                
                             }
+                            
                         }
                     } catch {
                         
                         print("Error deserializing JSON: \(error.localizedDescription)")
-                        DispatchQueue.main.async(){
-                                      self.ShowToast(message:"Please select Device first !")
-                                  }
+                        
                     }
                     
                     
@@ -491,118 +494,6 @@ class I2SAudioViewController: UIViewController, GCDAsyncSocketDelegate{
         self.menu.show(from: self)
     }
     
-    //popup device list
-    @IBAction func showI2SAudioOuptList(sender: UIButton) {
-        
-        
-        if(self.userSelectedDeviceIndex > -1){
-            self.menu = RSSelectionMenu(dataSource: CmdHelper.i2s_audio_array) { (cell, name, indexPath) in
-                cell.textLabel?.text = name
-            }
-            
-            let selectedNames: [String] = []
-            // provide selected items
-            self.menu.setSelectedItems(items: selectedNames) { (name, index, selected, selectedItems) in
-                
-                self.bt_i2s_output.setTitle(CmdHelper.i2s_audio_array[index], for: .init())
-                self.currentCmdNumber = self._5_set_I2S_output
-                var cmd = "" //get device identity cmd
-                self.isLockRead = true //prepare to read server feedback
-                self.receiveData = "" //server feedback data
-                
-                
-                switch index{
-                    
-                case 0:
-                    self.userSelectedI2SAudioOutputIndex = 0
-                    cmd = "set " + self.deviceList[self.userSelectedDeviceIndex] + " property nodes[I2S_AUDIO_OUTPUT:0].inputs[main:0].configuration.source.value 6\n"
-                    break
-                    
-                case 1:
-                    self.userSelectedI2SAudioOutputIndex = 1
-                    cmd = "set " + self.deviceList[self.userSelectedDeviceIndex] + " property nodes[I2S_AUDIO_OUTPUT:0].inputs[main:0].configuration.source.value 7\n"
-                    break
-                    
-                case 2:
-                    self.userSelectedI2SAudioOutputIndex = 2
-                    cmd = "set " + self.deviceList[self.userSelectedDeviceIndex] + " property nodes[I2S_AUDIO_OUTPUT:0].inputs[main:0].configuration.source.value 8\n"
-                    break
-                    
-                default:
-                    
-                    break
-                }
-                self.queueTCP.async  {
-                    self.mSocket.write((cmd.data(using: String.Encoding.utf8))!, withTimeout: -1, tag: 0)//send cmd to server
-                    self.mSocket.readData(withTimeout: -1, tag: 0)
-                }
-                
-            }
-            self.menu.show(from: self)
-        }else{
-            DispatchQueue.main.async(){
-                self.ShowToast(message:"Please select Device first !")
-            }
-            
-        }
-        
-    }
-    
-    
-    //popup HDMI Audio source
-    @IBAction func showSourceList(sender: UIButton) {
-        
-        if(self.userSelectedDeviceIndex > -1){
-            DispatchQueue.main.async(){
-                self.showLoading()
-            }
-            self.menu = RSSelectionMenu(dataSource: self.deviceList) { (cell, name, indexPath) in
-                cell.textLabel?.text = name
-            }
-            
-            let selectedNames: [String] = []
-            // provide selected items
-            self.menu.setSelectedItems(items: selectedNames) { (name, index, selected, selectedItems) in
-                
-                self.bt_i2s_change_source.setTitle(self.deviceList[index], for: .init())
-                
-                var cmd = ""
-                
-                switch self.userSelectedI2SAudioOutputIndex {
-                    
-                case 0:
-                    cmd = "join " + self.deviceList[index] +
-                        ":HDMI_AUDIO:0 " + self.deviceList[self.userSelectedDeviceIndex] + ":0\n"
-                    break
-                    
-                case 1:
-                    cmd = "join " + self.deviceList[index] +
-                        ":HDMI_AUDIO:0 " + self.deviceList[self.userSelectedDeviceIndex] + ":0\n"
-                    break
-                    
-                case 2:
-                    cmd = "join " + self.deviceList[index] +
-                        ":I2S_AUDIO:0 "  + self.deviceList[self.userSelectedDeviceIndex] + ":0\n"
-                    break
-                    
-                default:
-                    
-                    break
-                    
-                }
-                self.currentCmdNumber = self._9_change_source
-                self.mSocket.write((cmd.data(using: String.Encoding.utf8))!, withTimeout: -1, tag: 0)//send cmd to server
-                self.mSocket.readData(withTimeout: -1, tag: 0)
-            }
-            self.menu.show(from: self)
-        }else{
-             DispatchQueue.main.async(){
-                          self.ShowToast(message:"Please select Device first !")
-                      }
-        }
-        
-    }
-    
     
     //show toast
     func ShowToast(message: String){
@@ -612,48 +503,4 @@ class I2SAudioViewController: UIViewController, GCDAsyncSocketDelegate{
     }
     
     
-    //sned start I2S Audio
-    @IBAction func sendStartHDMIAudio(sender: UIButton) {
-        if(self.userSelectedDeviceIndex > -1){
-            DispatchQueue.main.async(){
-                self.showLoading()
-            }
-            var cmd:String = "start " + self.deviceList[self.userSelectedDeviceIndex] + ":I2S_AUDIO:0\n"
-            self.currentCmdNumber = self._6_start_I2S_output
-            self.mSocket.write((cmd.data(using: String.Encoding.utf8))!, withTimeout: -1, tag: 0)//send cmd to server
-            self.mSocket.readData(withTimeout: -1, tag: 0)
-        }else{
-            ShowToast(message:"Please select Device first !")
-        }
-    }
-    
-    //sned stop I2S Audio
-    @IBAction func sendStopHDMIAudio(sender: UIButton) {
-        if(self.userSelectedDeviceIndex > -1){
-            DispatchQueue.main.async(){
-                self.showLoading()
-            }
-            var cmd:String = "stop " + self.deviceList[self.userSelectedDeviceIndex] + ":I2S_AUDIO:0\n"
-            self.currentCmdNumber = self._7_stop_I2S_output
-            self.mSocket.write((cmd.data(using: String.Encoding.utf8))!, withTimeout: -1, tag: 0)//send cmd to server
-            self.mSocket.readData(withTimeout: -1, tag: 0)
-        }else{
-            ShowToast(message:"Please select Device first !")
-        }
-    }
-    
-    //sned leave I2S Audio
-    @IBAction func sendLeaveHDMIAudio(sender: UIButton) {
-        if(self.userSelectedDeviceIndex > -1){
-            DispatchQueue.main.async(){
-                self.showLoading()
-            }
-            var cmd:String = "leave " + self.deviceList[self.userSelectedDeviceIndex] + ":I2S_AUDIO:0\n"
-            self.currentCmdNumber = self._8_leave_I2S_output
-            self.mSocket.write((cmd.data(using: String.Encoding.utf8))!, withTimeout: -1, tag: 0)//send cmd to server
-            self.mSocket.readData(withTimeout: -1, tag: 0)
-        }else{
-            ShowToast(message:"Please select Device first !")
-        }
-    }
 }

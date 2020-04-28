@@ -46,7 +46,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BpU-z8-i2M" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-4771" y="-601"/>
+            <point key="canvasLocation" x="-4617" y="-1117"/>
         </scene>
         <!--more-->
         <scene sceneID="VBX-nf-aAv">
@@ -119,6 +119,26 @@
                                             <segue destination="Y8K-bA-m5g" kind="show" id="aRk-7b-QG4"/>
                                         </connections>
                                     </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="gXD-qR-1JH">
+                                        <rect key="frame" x="0.0" y="159.00000381469727" width="414" height="43.666667938232422"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="gXD-qR-1JH" id="tjW-38-36Y">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.666667938232422"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" text="USB Routing" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="flW-Fg-Nwe" userLabel="USB Routing">
+                                                    <rect key="frame" x="0.0" y="-0.33333587646484375" width="414" height="44"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                                    <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <segue destination="GUU-l4-wFh" kind="show" id="c0N-Ve-4sp"/>
+                                        </connections>
+                                    </tableViewCell>
                                 </cells>
                             </tableViewSection>
                         </sections>
@@ -133,6 +153,63 @@
             </objects>
             <point key="canvasLocation" x="-5859.420289855073" y="-601.33928571428567"/>
         </scene>
+        <!--USB Routing-->
+        <scene sceneID="lvJ-Wn-ojM">
+            <objects>
+                <viewController title="USB Routing" id="GUU-l4-wFh" customClass="USBRoutingViewController" customModule="AVP_Controller" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="e9f-fF-9xo">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="USB Routing" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DMV-3s-jIR">
+                                <rect key="frame" x="20" y="128" width="153.66666666666666" height="33.666666666666657"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="YH1-0O-RXB">
+                                <rect key="frame" x="41.333333333333343" y="248.00000000000003" width="331.33333333333326" height="127.33333333333334"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Device" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nLo-mI-aB7" userLabel="Device">
+                                        <rect key="frame" x="0.0" y="0.0" width="331.33333333333331" height="26.333333333333332"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" tag="601" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9Cd-P2-Pgy">
+                                        <rect key="frame" x="0.0" y="46.333333333333314" width="331.33333333333331" height="30"/>
+                                        <state key="normal" title="Select Device"/>
+                                        <connections>
+                                            <action selector="showDeviceListWithSender:" destination="GUU-l4-wFh" eventType="touchUpInside" id="eD2-GN-M7X"/>
+                                        </connections>
+                                    </button>
+                                    <segmentedControl opaque="NO" tag="602" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="k1T-eM-S8U">
+                                        <rect key="frame" x="0.0" y="96.333333333333314" width="331.33333333333331" height="32"/>
+                                        <segments>
+                                            <segment title="Local"/>
+                                            <segment title="Remote"/>
+                                            <segment title="Disabled"/>
+                                        </segments>
+                                    </segmentedControl>
+                                </subviews>
+                            </stackView>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="DMV-3s-jIR" firstAttribute="leading" secondItem="a2X-th-U2H" secondAttribute="leading" constant="20" id="16r-q9-Nnc"/>
+                            <constraint firstItem="DMV-3s-jIR" firstAttribute="top" secondItem="a2X-th-U2H" secondAttribute="top" constant="40" id="9Ri-zt-3n8"/>
+                            <constraint firstItem="YH1-0O-RXB" firstAttribute="top" secondItem="a2X-th-U2H" secondAttribute="top" constant="160" id="JMN-xl-lbM"/>
+                            <constraint firstItem="YH1-0O-RXB" firstAttribute="centerX" secondItem="e9f-fF-9xo" secondAttribute="centerX" id="c6w-Qf-VSf"/>
+                            <constraint firstItem="YH1-0O-RXB" firstAttribute="width" secondItem="e9f-fF-9xo" secondAttribute="width" multiplier="0.8" id="vX8-gP-JGb"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="a2X-th-U2H"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="zfY-Jz-Ofh"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="PBm-1c-ta7" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-4526" y="-444"/>
+        </scene>
         <!--I2S Audio-->
         <scene sceneID="JHD-ds-AGP">
             <objects>
@@ -140,14 +217,111 @@
                     <view key="view" contentMode="scaleToFill" id="2VJ-Ze-HRM">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="I2S Audio" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MXo-0c-k8F">
+                                <rect key="frame" x="20" y="128" width="116" height="33.666666666666657"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="20" translatesAutoresizingMaskIntoConstraints="NO" id="9kd-lD-SIP">
+                                <rect key="frame" x="41.333333333333343" y="248" width="331.33333333333326" height="319"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Device" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dz8-wS-q2r" userLabel="Device">
+                                        <rect key="frame" x="0.0" y="0.0" width="331.33333333333331" height="26.333333333333332"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" tag="501" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KY6-rn-zxK" userLabel="Device id">
+                                        <rect key="frame" x="0.0" y="46.333333333333314" width="331.33333333333331" height="30"/>
+                                        <state key="normal" title="Select Device"/>
+                                        <connections>
+                                            <action selector="showDeviceListWithSender:" destination="Y8K-bA-m5g" eventType="touchUpInside" id="auy-ce-Ylw"/>
+                                        </connections>
+                                    </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="I2S Audio Output" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vDb-TN-39Z">
+                                        <rect key="frame" x="0.0" y="96.333333333333314" width="331.33333333333331" height="26.333333333333329"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" tag="502" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hnu-U3-Jdj">
+                                        <rect key="frame" x="0.0" y="142.66666666666669" width="331.33333333333331" height="30"/>
+                                        <state key="normal" title="Button"/>
+                                        <connections>
+                                            <action selector="showI2SAudioOuptListWithSender:" destination="Y8K-bA-m5g" eventType="touchUpInside" id="WOl-jA-Ziv"/>
+                                        </connections>
+                                    </button>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="gE1-At-onW">
+                                        <rect key="frame" x="0.0" y="192.66666666666669" width="331.33333333333331" height="30"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sZT-1h-GbP">
+                                                <rect key="frame" x="0.0" y="0.0" width="105" height="30"/>
+                                                <color key="backgroundColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <state key="normal" title="Start">
+                                                    <color key="titleColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="sendStartHDMIAudioWithSender:" destination="Y8K-bA-m5g" eventType="touchUpInside" id="AgQ-na-fzu"/>
+                                                    <action selector="sendStartHDMIAudioWithSender:" destination="uB7-LY-DR2" eventType="touchUpInside" id="TkF-D4-bzg"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3fi-xG-iKz">
+                                                <rect key="frame" x="113" y="0.0" width="105.33333333333331" height="30"/>
+                                                <color key="backgroundColor" systemColor="systemPinkColor" red="1" green="0.1764705882" blue="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <state key="normal" title="Stop">
+                                                    <color key="titleColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="sendStopHDMIAudioWithSender:" destination="uB7-LY-DR2" eventType="touchUpInside" id="n6L-fe-z11"/>
+                                                    <action selector="sendStopHDMIAudioWithSender:" destination="Y8K-bA-m5g" eventType="touchUpInside" id="nFP-Ta-e0f"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EEV-zP-Ibx">
+                                                <rect key="frame" x="226.33333333333337" y="0.0" width="105" height="30"/>
+                                                <color key="backgroundColor" systemColor="opaqueSeparatorColor" red="0.77647058820000003" green="0.77647058820000003" blue="0.7843137255" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                <state key="normal" title="Leave">
+                                                    <color key="titleColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                                </state>
+                                                <connections>
+                                                    <action selector="sendLeaveHDMIAudioWithSender:" destination="Y8K-bA-m5g" eventType="touchUpInside" id="7yA-EM-bmM"/>
+                                                    <action selector="sendLeaveHDMIAudioWithSender:" destination="uB7-LY-DR2" eventType="touchUpInside" id="U35-ML-XWv"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="I2S Audio Source" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nkj-HP-nCo">
+                                        <rect key="frame" x="0.0" y="242.66666666666669" width="331.33333333333331" height="26.333333333333314"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" tag="503" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PLo-9a-bBS">
+                                        <rect key="frame" x="0.0" y="289" width="331.33333333333331" height="30"/>
+                                        <state key="normal" title="Select Device"/>
+                                        <connections>
+                                            <action selector="showSourceListWithSender:" destination="Y8K-bA-m5g" eventType="touchUpInside" id="q3k-WX-Gvv"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                            </stackView>
+                        </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="MXo-0c-k8F" firstAttribute="top" secondItem="cLz-lb-npD" secondAttribute="top" constant="40" id="HMW-Mg-1I0"/>
+                            <constraint firstItem="9kd-lD-SIP" firstAttribute="centerX" secondItem="2VJ-Ze-HRM" secondAttribute="centerX" id="Mtp-kh-K5j"/>
+                            <constraint firstItem="MXo-0c-k8F" firstAttribute="leading" secondItem="cLz-lb-npD" secondAttribute="leading" constant="20" id="htT-1h-11c"/>
+                            <constraint firstItem="9kd-lD-SIP" firstAttribute="width" secondItem="2VJ-Ze-HRM" secondAttribute="width" multiplier="0.8" id="pH6-JY-SRg"/>
+                            <constraint firstItem="9kd-lD-SIP" firstAttribute="top" secondItem="cLz-lb-npD" secondAttribute="top" constant="160" id="pYk-C7-IFf"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="cLz-lb-npD"/>
                     </view>
                     <navigationItem key="navigationItem" id="fLK-BD-KnV"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Dan-sc-8gQ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-5193" y="130"/>
+            <point key="canvasLocation" x="-5194.202898550725" y="129.91071428571428"/>
         </scene>
         <!--HDMI Audio-->
         <scene sceneID="KxL-J6-IUg">
@@ -166,14 +340,14 @@
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" tag="401" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g4j-w9-dmk">
+                                    <button opaque="NO" tag="401" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="g4j-w9-dmk" userLabel="Device id">
                                         <rect key="frame" x="0.0" y="46.333333333333314" width="331.33333333333331" height="30"/>
                                         <state key="normal" title="Select Device"/>
                                         <connections>
                                             <action selector="showDeviceListWithSender:" destination="uB7-LY-DR2" eventType="touchUpInside" id="NK0-WE-M6w"/>
                                         </connections>
                                     </button>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="HDMI Audio Status" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zXh-qP-PlX" userLabel="HDMI Audio Status">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="HDMI Audio Output" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zXh-qP-PlX" userLabel="HDMI Audio Status">
                                         <rect key="frame" x="0.0" y="96.333333333333314" width="331.33333333333331" height="26.333333333333329"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="22"/>
                                         <nil key="textColor"/>
@@ -182,7 +356,7 @@
                                     <button opaque="NO" tag="402" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DBY-Q4-2zw" userLabel="Button HDMI Audio status">
                                         <rect key="frame" x="0.0" y="142.66666666666669" width="331.33333333333331" height="30"/>
                                         <connections>
-                                            <action selector="showHDMITypeWithSender:" destination="uB7-LY-DR2" eventType="touchUpInside" id="zxa-CB-oMt"/>
+                                            <action selector="showHDMIAudioOutputListWithSender:" destination="uB7-LY-DR2" eventType="touchUpInside" id="zxa-CB-oMt"/>
                                         </connections>
                                     </button>
                                     <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Gft-iZ-L4T">
@@ -275,10 +449,10 @@
             </objects>
             <point key="canvasLocation" x="-6991" y="-601"/>
         </scene>
-        <!--Tab Bar Controller-->
+        <!--Base Tab Bar Controller-->
         <scene sceneID="d3b-fX-N2t">
             <objects>
-                <tabBarController id="Ecn-og-H7H" sceneMemberID="viewController">
+                <tabBarController id="Ecn-og-H7H" customClass="BaseTabBarController" customModule="AVP_Controller" customModuleProvider="target" sceneMemberID="viewController">
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="4bA-3y-C5e">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>

@@ -135,69 +135,98 @@ class ChangeSourceViewController: UIViewController, GCDAsyncSocketDelegate, UITa
             
         case self._1_cmd_mode_human:
             print("_1_cmd_mode_human")
-            let humanMode: HumanMode = try! JSONDecoder().decode(HumanMode.self, from: didRead)
-            if(humanMode.status == "SUCCESS"){
-                self.queueTCP.async  {
-                    self.currentCmdNumber = self._2_cmd_require_blueriver_api_2_19_0
-                    self.mSocket.write((CmdHelper.cmd_require_blueriver_api_2_19_0.data(using: String.Encoding.utf8))!, withTimeout: -1, tag: 0)
-                    self.mSocket.readData(withTimeout: 1, tag: 0)
+            
+            do {
+                _ = try JSONSerialization.jsonObject(with: didRead)
+                let humanMode: HumanMode = try! JSONDecoder().decode(HumanMode.self, from: didRead)
+                if(humanMode.status == "SUCCESS"){
+                    self.queueTCP.async  {
+                        self.currentCmdNumber = self._2_cmd_require_blueriver_api_2_19_0
+                        self.mSocket.write((CmdHelper.cmd_require_blueriver_api_2_19_0.data(using: String.Encoding.utf8))!, withTimeout: -1, tag: 0)
+                        self.mSocket.readData(withTimeout: 1, tag: 0)
+                    }
+                }else{
+                    DispatchQueue.main.async {
+                        self.closeLoading()
+                        self.ShowToast(message: "Request timeout")
+                    }
                 }
-            }else{
+            } catch {
+                print("Error deserializing JSON: \(error.localizedDescription)")
                 DispatchQueue.main.async {
                     self.closeLoading()
+                    self.ShowToast(message: "Request timeout")
                 }
             }
+            
             break
             
         case self._2_cmd_require_blueriver_api_2_19_0:
             print("_2_cmd_require_blueriver_api_2_19_0")
-            let blueriver_api: HumanMode = try! JSONDecoder().decode(HumanMode.self, from: didRead)
-            if(blueriver_api.status == "SUCCESS"){
-                print("initial successful")
-                self.isLockRead = true
-                self.currentCmdNumber = self._3_get_all_list
-                self.deviceList.removeAll()
-                self.receiveData = ""
-                
-                DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                    self.isLockRead = false
-                    do {
-                        _ = try JSONSerialization.jsonObject(with: self.receiveData.data(using: .utf8)!)
-                        print("Valid Json")
-                        let get_all_list: GetAllList = try! JSONDecoder().decode(GetAllList.self, from: self.receiveData.data(using: .utf8)!)
-                        if(get_all_list.result.devices.count > 0){
-                            for index in get_all_list.result.devices{
-                                self.deviceList.append(index.device_id)
-                                print(index.device_id)
+            
+            do {
+                _ = try JSONSerialization.jsonObject(with: didRead)
+                let blueriver_api: HumanMode = try! JSONDecoder().decode(HumanMode.self, from: didRead)
+                if(blueriver_api.status == "SUCCESS"){
+                    print("initial successful")
+                    self.isLockRead = true
+                    self.currentCmdNumber = self._3_get_all_list
+                    self.deviceList.removeAll()
+                    self.receiveData = ""
+                    
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                        self.isLockRead = false
+                        do {
+                            _ = try JSONSerialization.jsonObject(with: self.receiveData.data(using: .utf8)!)
+                            print("Valid Json")
+                            let get_all_list: GetAllList = try! JSONDecoder().decode(GetAllList.self, from: self.receiveData.data(using: .utf8)!)
+                            if(get_all_list.result.devices.count > 0){
+                                for index in get_all_list.result.devices{
+                                    self.deviceList.append(index.device_id)
+                                    print(index.device_id)
+                                }
+                                
+                                DispatchQueue.main.async {
+                                    self.closeLoading()
+                                    self.tableDeviceList.reloadData()
+                                }
                             }
-                            
+                        } catch {
+                            print("Error deserializing JSON: \(error.localizedDescription)")
                             DispatchQueue.main.async {
                                 self.closeLoading()
-                                self.tableDeviceList.reloadData()
+                                self.ShowToast(message: "Request timeout")
                             }
                         }
-                    } catch {
-                        print("Error deserializing JSON: \(error.localizedDescription)")
+                        
+                        
                     }
-                    
-                    
-                }
-                self.queueTCP.async {
-                    self.mSocket.write((CmdHelper.cmd_get_all_list.data(using: String.Encoding.utf8))!, withTimeout: -1, tag: 0)
-                    while(true){
-                        if(self.isLockRead){
-                            self.mSocket.readData(withTimeout: -1, tag: 0)
-                        }else{
-                            break
+                    self.queueTCP.async {
+                        self.mSocket.write((CmdHelper.cmd_get_all_list.data(using: String.Encoding.utf8))!, withTimeout: -1, tag: 0)
+                        while(true){
+                            if(self.isLockRead){
+                                self.mSocket.readData(withTimeout: -1, tag: 0)
+                            }else{
+                                break
+                            }
                         }
                     }
+                    
+                }else{
+                    DispatchQueue.main.async {
+                        self.closeLoading()
+                        self.ShowToast(message: "Request timeout")
+                    }
                 }
+            } catch {
                 
-            }else{
+                print("Error deserializing JSON: \(error.localizedDescription)")
                 DispatchQueue.main.async {
                     self.closeLoading()
+                    self.ShowToast(message: "Request timeout")
                 }
             }
+            
             break
             
         case self._3_get_all_list:
@@ -209,24 +238,31 @@ class ChangeSourceViewController: UIViewController, GCDAsyncSocketDelegate, UITa
             
         case self._4_change_source:
             print("_4_change_source")
-            print(String(decoding: didRead, as: UTF8.self))
-            let changeSource: ChangeSource = try! JSONDecoder().decode(ChangeSource.self, from: didRead)
-            if(changeSource.status == "PROCESSING"){
-                DispatchQueue.main.async {
-                    self.view.makeToast("Send successful ", duration: 3.0, position: .bottom)
+            
+            do {
+                _ = try JSONSerialization.jsonObject(with: didRead)
+                let changeSource: ChangeSource = try! JSONDecoder().decode(ChangeSource.self, from: didRead)
+                if(changeSource.status == "PROCESSING"){
+                    DispatchQueue.main.async {
+                        self.view.makeToast("Send successful ", duration: 3.0, position: .bottom)
+                    }
+                }else if(changeSource.status == "SUCCESS"){
+                    
+                    let error_message : Error = try! JSONDecoder().decode(Error.self, from: didRead)
+                    print("change error " + String(error_message.result.error.count))
+                    DispatchQueue.main.async {
+                        self.view.makeToast("Send failed: " + error_message.result.error[0].message, duration: 3.0, position: .bottom)
+                    }
+                }else{
+                    DispatchQueue.main.async {
+                        self.view.makeToast("Send failed")
+                    }
                 }
-            }else if(changeSource.status == "SUCCESS"){
+            } catch {
+                print("Error deserializing JSON: \(error.localizedDescription)")
                 
-                let error_message : Error = try! JSONDecoder().decode(Error.self, from: didRead)
-                print("change error " + String(error_message.result.error.count))
-                DispatchQueue.main.async {
-                    self.view.makeToast("Send failed: " + error_message.result.error[0].message, duration: 3.0, position: .bottom)
-                }
-            }else{
-                DispatchQueue.main.async {
-                    self.view.makeToast("Send failed")
-                }
             }
+            
             break
             
         default:
@@ -402,6 +438,13 @@ class ChangeSourceViewController: UIViewController, GCDAsyncSocketDelegate, UITa
     
     struct ErrorDevicr: Decodable{
         let message: String!
+    }
+    
+    //show toast
+    func ShowToast(message: String){
+        DispatchQueue.main.async() {
+            self.view.makeToast(message, duration: 2.0, position: .bottom)
+        }
     }
 }
 

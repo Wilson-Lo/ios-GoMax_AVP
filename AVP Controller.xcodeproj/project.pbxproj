@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		7A65BA3901C547CBEBF6FDB1 /* Pods_AVP_Controller_AVP_ControllerUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C80CC265871EE363B7B28C40 /* Pods_AVP_Controller_AVP_ControllerUITests.framework */; };
+		86411056245829F600B2BD1A /* BaseTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86411055245829F600B2BD1A /* BaseTabBarController.swift */; };
 		8643F11824505870001E87AF /* CmdHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8643F11724505870001E87AF /* CmdHelper.swift */; };
 		8644E73324513B7800119072 /* CustomTableViewCellDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8644E73124513B7800119072 /* CustomTableViewCellDevice.swift */; };
 		8644E73424513B7800119072 /* CustomTableViewCellDevice.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8644E73224513B7800119072 /* CustomTableViewCellDevice.xib */; };
@@ -21,6 +22,7 @@
 		8654D8FB244FDA4B00B5C342 /* AVP_ControllerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8654D8FA244FDA4B00B5C342 /* AVP_ControllerUITests.swift */; };
 		8654D906244FEEF500B5C342 /* ChangeSourceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8654D905244FEEF500B5C342 /* ChangeSourceViewController.swift */; };
 		86AC5584245183DD00232A80 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86AC5583245183DD00232A80 /* SettingsViewController.swift */; };
+		86D5897424580B860088F208 /* USBRoutingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D5897324580B860088F208 /* USBRoutingViewController.swift */; };
 		86D849A324530023001C8B6B /* HDMIAudioViewContorller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D849A224530023001C8B6B /* HDMIAudioViewContorller.swift */; };
 		86D849A52453003A001C8B6B /* I2SAudioViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86D849A42453003A001C8B6B /* I2SAudioViewController.swift */; };
 		F77F6D10A32A86EA615CAED6 /* Pods_AVP_Controller.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D9780BCA93681FD006F0D35 /* Pods_AVP_Controller.framework */; };
@@ -39,6 +41,7 @@
 /* Begin PBXFileReference section */
 		28778D7823F5D310764918D8 /* Pods-AVP Controller.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AVP Controller.release.xcconfig"; path = "Target Support Files/Pods-AVP Controller/Pods-AVP Controller.release.xcconfig"; sourceTree = "<group>"; };
 		2D9780BCA93681FD006F0D35 /* Pods_AVP_Controller.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AVP_Controller.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		86411055245829F600B2BD1A /* BaseTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTabBarController.swift; sourceTree = "<group>"; };
 		8643F11724505870001E87AF /* CmdHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CmdHelper.swift; sourceTree = "<group>"; };
 		8644E73124513B7800119072 /* CustomTableViewCellDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTableViewCellDevice.swift; sourceTree = "<group>"; };
 		8644E73224513B7800119072 /* CustomTableViewCellDevice.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomTableViewCellDevice.xib; sourceTree = "<group>"; };
@@ -56,6 +59,7 @@
 		8654D8FC244FDA4B00B5C342 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8654D905244FEEF500B5C342 /* ChangeSourceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeSourceViewController.swift; sourceTree = "<group>"; };
 		86AC5583245183DD00232A80 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		86D5897324580B860088F208 /* USBRoutingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = USBRoutingViewController.swift; sourceTree = "<group>"; };
 		86D849A224530023001C8B6B /* HDMIAudioViewContorller.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HDMIAudioViewContorller.swift; sourceTree = "<group>"; };
 		86D849A42453003A001C8B6B /* I2SAudioViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = I2SAudioViewController.swift; sourceTree = "<group>"; };
 		C80CC265871EE363B7B28C40 /* Pods_AVP_Controller_AVP_ControllerUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AVP_Controller_AVP_ControllerUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -142,6 +146,8 @@
 				865170BA2452B1AF00E66F2C /* DeviceListViewController.swift */,
 				86D849A224530023001C8B6B /* HDMIAudioViewContorller.swift */,
 				86D849A42453003A001C8B6B /* I2SAudioViewController.swift */,
+				86D5897324580B860088F208 /* USBRoutingViewController.swift */,
+				86411055245829F600B2BD1A /* BaseTabBarController.swift */,
 			);
 			path = "AVP Controller";
 			sourceTree = "<group>";
@@ -346,9 +352,11 @@
 				8654D8E4244FDA4900B5C342 /* AppDelegate.swift in Sources */,
 				86D849A52453003A001C8B6B /* I2SAudioViewController.swift in Sources */,
 				86D849A324530023001C8B6B /* HDMIAudioViewContorller.swift in Sources */,
+				86D5897424580B860088F208 /* USBRoutingViewController.swift in Sources */,
 				86AC5584245183DD00232A80 /* SettingsViewController.swift in Sources */,
 				8643F11824505870001E87AF /* CmdHelper.swift in Sources */,
 				865170BB2452B1AF00E66F2C /* DeviceListViewController.swift in Sources */,
+				86411056245829F600B2BD1A /* BaseTabBarController.swift in Sources */,
 				8654D906244FEEF500B5C342 /* ChangeSourceViewController.swift in Sources */,
 				8644E73324513B7800119072 /* CustomTableViewCellDevice.swift in Sources */,
 				8654D8E6244FDA4900B5C342 /* SceneDelegate.swift in Sources */,
@@ -515,6 +523,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = NX4YVXZ5NA;
 				INFOPLIST_FILE = "AVP Controller/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -534,6 +543,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = NX4YVXZ5NA;
 				INFOPLIST_FILE = "AVP Controller/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
