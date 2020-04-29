@@ -159,17 +159,29 @@ class DeviceListViewController: UIViewController, GCDAsyncSocketDelegate, UITabl
                         do {
                             _ = try JSONSerialization.jsonObject(with: self.receiveData.data(using: .utf8)!)
                             print("Valid Json")
-                            let get_all_list: GetAllList = try! JSONDecoder().decode(GetAllList.self, from: self.receiveData.data(using: .utf8)!)
-                            if(get_all_list.result.devices.count > 0){
-                                for index in get_all_list.result.devices{
-                                    self.deviceList.append(index.device_id)
+                            print(self.receiveData)
+                            let checkFeedbackStatus:CheckFeedbackstatus  = try! JSONDecoder().decode(CheckFeedbackstatus.self, from: self.receiveData.data(using: .utf8)!)
+                            
+                            if(checkFeedbackStatus.status == "SUCCESS"){
+                                let get_all_list: GetAllList = try! JSONDecoder().decode(GetAllList.self, from: self.receiveData.data(using: .utf8)!)
+                                if(get_all_list.result.devices.count > 0){
+                                    for index in get_all_list.result.devices{
+                                        self.deviceList.append(index.device_id)
+                                    }
+                                    
+                                    DispatchQueue.main.async {
+                                        self.closeLoading()
+                                        self.tableDeviceList.reloadData()
+                                    }
                                 }
+                            }else{
+                                self.closeLoading()
+                                self.ShowToast(message: "Request timeout")
                                 
-                                DispatchQueue.main.async {
-                                    self.closeLoading()
-                                    self.tableDeviceList.reloadData()
-                                }
                             }
+                            
+                            
+                            
                         } catch {
                             print("Error deserializing JSON: \(error.localizedDescription)")
                             DispatchQueue.main.async {
@@ -273,16 +285,28 @@ class DeviceListViewController: UIViewController, GCDAsyncSocketDelegate, UITabl
                 self.closeLoading()
                 self.isLockRead = false
                 var strDeviceInfo: String = ""
-                
                 do {
                     _ = try JSONSerialization.jsonObject(with: self.receiveData.data(using: .utf8)!)
-                    let device_info: DeviceInfo = try! JSONDecoder().decode(DeviceInfo.self, from: self.receiveData.data(using: .utf8)!)
-                    strDeviceInfo.append(device_info.result.devices[0].identity.chipset_type + " (Chipset)\n")
-                    strDeviceInfo.append(device_info.result.devices[0].identity.engine + " (Engine)\n")
-                    strDeviceInfo.append(device_info.result.devices[0].identity.firmware_comment + "\n")
-                    strDeviceInfo.append("VID - " + String(device_info.result.devices[0].identity.vendor_id) + " -- PID -" + String(device_info.result.devices[0].identity.product_id) + "\n")
-                    strDeviceInfo.append(device_info.result.devices[0].nodes[0].status.ip.address)
-                    self.showPopDialog(deviceID: self.deviceList[indexPath.row], deviceInfo: strDeviceInfo)
+                    let checkFeedbackStatus:CheckFeedbackstatus  = try! JSONDecoder().decode(CheckFeedbackstatus.self, from: self.receiveData.data(using: .utf8)!)
+                    
+                    if(checkFeedbackStatus.status == "SUCCESS"){
+                        let device_info: DeviceInfo = try! JSONDecoder().decode(DeviceInfo.self, from: self.receiveData.data(using: .utf8)!)
+                        if(device_info.result.devices.count > 0){
+                            strDeviceInfo.append(device_info.result.devices[0].identity.chipset_type + " (Chipset)\n")
+                            strDeviceInfo.append(device_info.result.devices[0].identity.engine + " (Engine)\n")
+                            strDeviceInfo.append(device_info.result.devices[0].identity.firmware_comment + "\n")
+                            strDeviceInfo.append("VID - " + String(device_info.result.devices[0].identity.vendor_id) + " -- PID -" + String(device_info.result.devices[0].identity.product_id) + "\n")
+                            
+                            if(device_info.result.devices[0].nodes.count > 0){
+                                strDeviceInfo.append(device_info.result.devices[0].nodes[0].status.ip.address)
+                                
+                            }
+                            self.showPopDialog(deviceID: self.deviceList[indexPath.row], deviceInfo: strDeviceInfo)
+                        }
+                    }else{
+                        self.ShowToast(message: "Request timeout")
+                    }
+                    
                 } catch {
                     print("Error deserializing JSON: \(error.localizedDescription)")
                     self.ShowToast(message: "Request timeout")
@@ -327,8 +351,12 @@ class DeviceListViewController: UIViewController, GCDAsyncSocketDelegate, UITabl
         }
     }
     
+    struct CheckFeedbackstatus: Decodable{
+        let status: String!
+    }
+    
     struct HumanMode: Decodable {
-        let  status: String
+        let  status: String!
         let  request_id: String!
         let  result: String!
         let  error: String!

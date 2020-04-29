@@ -181,17 +181,28 @@ class HDMIAudioViewContorller: UIViewController, GCDAsyncSocketDelegate{
                         
                         do {
                             _ = try JSONSerialization.jsonObject(with: self.receiveData.data(using: .utf8)!)
-                            let get_all_list: GetAllList = try! JSONDecoder().decode(GetAllList.self, from: self.receiveData.data(using: .utf8)!)
-                            if(get_all_list.result.devices.count > 0){
-                                for index in get_all_list.result.devices{
-                                    self.deviceList.append(index.device_id)
-                                    print(index.device_id)
+                            
+                            let checkFeedbackStatus:CheckFeedbackstatus  = try! JSONDecoder().decode(CheckFeedbackstatus.self, from: self.receiveData.data(using: .utf8)!)
+                            
+                            if(checkFeedbackStatus.status == "SUCCESS"){
+                                let get_all_list: GetAllList = try! JSONDecoder().decode(GetAllList.self, from: self.receiveData.data(using: .utf8)!)
+                                if(get_all_list.result.devices.count > 0){
+                                    for index in get_all_list.result.devices{
+                                        self.deviceList.append(index.device_id)
+                                        print(index.device_id)
+                                    }
+                                    
+                                    DispatchQueue.main.async {
+                                        self.closeLoading()
+                                    }
                                 }
-                                
+                            }else{
                                 DispatchQueue.main.async {
                                     self.closeLoading()
+                                    self.ShowToast(message: "Request timeout")
                                 }
                             }
+                            
                         } catch {
                             print("Error deserializing JSON: \(error.localizedDescription)")
                             DispatchQueue.main.async {
@@ -365,6 +376,10 @@ class HDMIAudioViewContorller: UIViewController, GCDAsyncSocketDelegate{
         dismiss(animated: false, completion: nil)
     }
     
+    struct CheckFeedbackstatus: Decodable{
+        let status: String!
+    }
+    
     struct HumanMode: Decodable {
         let  status: String
         let  request_id: String!
@@ -461,51 +476,70 @@ class HDMIAudioViewContorller: UIViewController, GCDAsyncSocketDelegate{
                     
                     do {
                         _ = try JSONSerialization.jsonObject(with: self.receiveData.data(using: .utf8)!)
+                        let checkFeedbackStatus:CheckFeedbackstatus  = try! JSONDecoder().decode(CheckFeedbackstatus.self, from: self.receiveData.data(using: .utf8)!)
                         
-                        let device_settings: DeviceSettings = try! JSONDecoder().decode(DeviceSettings.self, from: self.receiveData.data(using: .utf8)!)
-                        for indexNodes in device_settings.result.devices[0].nodes{
+                        if(checkFeedbackStatus.status == "SUCCESS"){
                             
-                            print(indexNodes.self.type)
-                            if(indexNodes.self.type == "HDMI_ENCODER"){
-                                print("inputs cout " + String(indexNodes.self.inputs.count))
-                                for indexInputs in indexNodes.self.inputs{
-                                    print(indexInputs.name)
-                                    if(indexInputs.name == "audio"){
-                                        print(indexInputs.configuration.source.value)
-                                        switch indexInputs.configuration.source.value{
-                                            
-                                        case 2:
-                                            self.userSelectedHDMIAudioOutputIndex = 0
-                                            self.bt_hdmi_output.setTitle(CmdHelper.hdmi_audio_array[0], for: .init())
-                                            break
-                                            
-                                        case 6:
-                                            self.userSelectedHDMIAudioOutputIndex = 1
-                                            self.bt_hdmi_output.setTitle(CmdHelper.hdmi_audio_array[1], for: .init())
-                                            break
-                                            
-                                        case 7:
-                                            self.userSelectedHDMIAudioOutputIndex = 2
-                                            self.bt_hdmi_output.setTitle(CmdHelper.hdmi_audio_array[2], for: .init())
-                                            break
-                                            
-                                        case 8:
-                                            self.userSelectedHDMIAudioOutputIndex = 3
-                                            self.bt_hdmi_output.setTitle(CmdHelper.hdmi_audio_array[3], for: .init())
-                                            break
-                                            
-                                        case 9:
-                                            self.userSelectedHDMIAudioOutputIndex = 4
-                                            self.bt_hdmi_output.setTitle(CmdHelper.hdmi_audio_array[4], for: .init())
-                                            break
-                                            
-                                        default:
-                                            break
+                            let device_settings: DeviceSettings = try! JSONDecoder().decode(DeviceSettings.self, from: self.receiveData.data(using: .utf8)!)
+                            
+                            if(device_settings.result.devices.count > 0){
+                                for indexNodes in device_settings.result.devices[0].nodes{
+                                    
+                                    print(indexNodes.self.type)
+                                    if(indexNodes.self.type == "HDMI_ENCODER"){
+                                        print("inputs cout " + String(indexNodes.self.inputs.count))
+                                        for indexInputs in indexNodes.self.inputs{
+                                            print(indexInputs.name)
+                                            if(indexInputs.name == "audio"){
+                                                print(indexInputs.configuration.source.value)
+                                                switch indexInputs.configuration.source.value{
+                                                    
+                                                case 2:
+                                                    self.userSelectedHDMIAudioOutputIndex = 0
+                                                    self.bt_hdmi_output.setTitle(CmdHelper.hdmi_audio_array[0], for: .init())
+                                                    break
+                                                    
+                                                case 6:
+                                                    self.userSelectedHDMIAudioOutputIndex = 1
+                                                    self.bt_hdmi_output.setTitle(CmdHelper.hdmi_audio_array[1], for: .init())
+                                                    break
+                                                    
+                                                case 7:
+                                                    self.userSelectedHDMIAudioOutputIndex = 2
+                                                    self.bt_hdmi_output.setTitle(CmdHelper.hdmi_audio_array[2], for: .init())
+                                                    break
+                                                    
+                                                case 8:
+                                                    self.userSelectedHDMIAudioOutputIndex = 3
+                                                    self.bt_hdmi_output.setTitle(CmdHelper.hdmi_audio_array[3], for: .init())
+                                                    break
+                                                    
+                                                case 9:
+                                                    self.userSelectedHDMIAudioOutputIndex = 4
+                                                    self.bt_hdmi_output.setTitle(CmdHelper.hdmi_audio_array[4], for: .init())
+                                                    break
+                                                    
+                                                default:
+                                                    break
+                                                }
+                                            }
                                         }
                                     }
                                 }
+                            }else{
+                                DispatchQueue.main.async {
+                                                               self.view.makeToast("Request timeout")
+                                                           }
+                            }
+                            
+                            
+                            
+                        }else{
+                            DispatchQueue.main.async {
+                                self.view.makeToast("Request timeout")
                             }
                         }
+                        
                     } catch {
                         print("Error deserializing JSON: \(error.localizedDescription)")
                         DispatchQueue.main.async {
@@ -598,8 +632,8 @@ class HDMIAudioViewContorller: UIViewController, GCDAsyncSocketDelegate{
             self.menu.show(from: self)
         }else{
             DispatchQueue.main.async(){
-                          self.ShowToast(message:"Please select Device first !")
-                      }
+                self.ShowToast(message:"Please select Device first !")
+            }
         }
         
     }
@@ -664,9 +698,9 @@ class HDMIAudioViewContorller: UIViewController, GCDAsyncSocketDelegate{
             self.menu.show(from: self)
             
         }else{
-             DispatchQueue.main.async(){
-                          self.ShowToast(message:"Please select Device first !")
-                      }
+            DispatchQueue.main.async(){
+                self.ShowToast(message:"Please select Device first !")
+            }
         }
         
         
@@ -683,9 +717,9 @@ class HDMIAudioViewContorller: UIViewController, GCDAsyncSocketDelegate{
             self.mSocket.write((cmd.data(using: String.Encoding.utf8))!, withTimeout: -1, tag: 0)//send cmd to server
             self.mSocket.readData(withTimeout: -1, tag: 0)
         }else{
-             DispatchQueue.main.async(){
-                          self.ShowToast(message:"Please select Device first !")
-                      }
+            DispatchQueue.main.async(){
+                self.ShowToast(message:"Please select Device first !")
+            }
         }
     }
     
@@ -700,9 +734,9 @@ class HDMIAudioViewContorller: UIViewController, GCDAsyncSocketDelegate{
             self.mSocket.write((cmd.data(using: String.Encoding.utf8))!, withTimeout: -1, tag: 0)//send cmd to server
             self.mSocket.readData(withTimeout: -1, tag: 0)
         }else{
-              DispatchQueue.main.async(){
-                          self.ShowToast(message:"Please select Device first !")
-                      }
+            DispatchQueue.main.async(){
+                self.ShowToast(message:"Please select Device first !")
+            }
         }
     }
     
@@ -717,9 +751,9 @@ class HDMIAudioViewContorller: UIViewController, GCDAsyncSocketDelegate{
             self.mSocket.write((cmd.data(using: String.Encoding.utf8))!, withTimeout: -1, tag: 0)//send cmd to server
             self.mSocket.readData(withTimeout: -1, tag: 0)
         }else{
-              DispatchQueue.main.async(){
-                          self.ShowToast(message:"Please select Device first !")
-                      }
+            DispatchQueue.main.async(){
+                self.ShowToast(message:"Please select Device first !")
+            }
         }
     }
 }

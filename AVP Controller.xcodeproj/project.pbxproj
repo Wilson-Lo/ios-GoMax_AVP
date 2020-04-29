@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		7A65BA3901C547CBEBF6FDB1 /* Pods_AVP_Controller_AVP_ControllerUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C80CC265871EE363B7B28C40 /* Pods_AVP_Controller_AVP_ControllerUITests.framework */; };
 		86411056245829F600B2BD1A /* BaseTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86411055245829F600B2BD1A /* BaseTabBarController.swift */; };
+		864150D224592C530072CE0B /* DisplayWallViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 864150D124592C530072CE0B /* DisplayWallViewController.swift */; };
 		8643F11824505870001E87AF /* CmdHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8643F11724505870001E87AF /* CmdHelper.swift */; };
 		8644E73324513B7800119072 /* CustomTableViewCellDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8644E73124513B7800119072 /* CustomTableViewCellDevice.swift */; };
 		8644E73424513B7800119072 /* CustomTableViewCellDevice.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8644E73224513B7800119072 /* CustomTableViewCellDevice.xib */; };
@@ -42,6 +43,7 @@
 		28778D7823F5D310764918D8 /* Pods-AVP Controller.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AVP Controller.release.xcconfig"; path = "Target Support Files/Pods-AVP Controller/Pods-AVP Controller.release.xcconfig"; sourceTree = "<group>"; };
 		2D9780BCA93681FD006F0D35 /* Pods_AVP_Controller.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AVP_Controller.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		86411055245829F600B2BD1A /* BaseTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTabBarController.swift; sourceTree = "<group>"; };
+		864150D124592C530072CE0B /* DisplayWallViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayWallViewController.swift; sourceTree = "<group>"; };
 		8643F11724505870001E87AF /* CmdHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CmdHelper.swift; sourceTree = "<group>"; };
 		8644E73124513B7800119072 /* CustomTableViewCellDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTableViewCellDevice.swift; sourceTree = "<group>"; };
 		8644E73224513B7800119072 /* CustomTableViewCellDevice.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = CustomTableViewCellDevice.xib; sourceTree = "<group>"; };
@@ -148,6 +150,7 @@
 				86D849A42453003A001C8B6B /* I2SAudioViewController.swift */,
 				86D5897324580B860088F208 /* USBRoutingViewController.swift */,
 				86411055245829F600B2BD1A /* BaseTabBarController.swift */,
+				864150D124592C530072CE0B /* DisplayWallViewController.swift */,
 			);
 			path = "AVP Controller";
 			sourceTree = "<group>";
@@ -353,6 +356,7 @@
 				86D849A52453003A001C8B6B /* I2SAudioViewController.swift in Sources */,
 				86D849A324530023001C8B6B /* HDMIAudioViewContorller.swift in Sources */,
 				86D5897424580B860088F208 /* USBRoutingViewController.swift in Sources */,
+				864150D224592C530072CE0B /* DisplayWallViewController.swift in Sources */,
 				86AC5584245183DD00232A80 /* SettingsViewController.swift in Sources */,
 				8643F11824505870001E87AF /* CmdHelper.swift in Sources */,
 				865170BB2452B1AF00E66F2C /* DeviceListViewController.swift in Sources */,

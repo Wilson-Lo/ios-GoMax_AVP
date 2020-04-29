@@ -179,18 +179,30 @@ class ChangeSourceViewController: UIViewController, GCDAsyncSocketDelegate, UITa
                         do {
                             _ = try JSONSerialization.jsonObject(with: self.receiveData.data(using: .utf8)!)
                             print("Valid Json")
-                            let get_all_list: GetAllList = try! JSONDecoder().decode(GetAllList.self, from: self.receiveData.data(using: .utf8)!)
-                            if(get_all_list.result.devices.count > 0){
-                                for index in get_all_list.result.devices{
-                                    self.deviceList.append(index.device_id)
-                                    print(index.device_id)
+                            let checkFeedbackStatus:CheckFeedbackstatus  = try! JSONDecoder().decode(CheckFeedbackstatus.self, from: self.receiveData.data(using: .utf8)!)
+                            
+                            if(checkFeedbackStatus.status == "SUCCESS"){
+                                let get_all_list: GetAllList = try! JSONDecoder().decode(GetAllList.self, from: self.receiveData.data(using: .utf8)!)
+                                if(get_all_list.result.devices.count > 0){
+                                    for index in get_all_list.result.devices{
+                                        self.deviceList.append(index.device_id)
+                                        print(index.device_id)
+                                    }
+                                    
+                                    DispatchQueue.main.async {
+                                        self.closeLoading()
+                                        self.tableDeviceList.reloadData()
+                                    }
                                 }
-                                
+                            }else{
                                 DispatchQueue.main.async {
                                     self.closeLoading()
-                                    self.tableDeviceList.reloadData()
+                                    self.ShowToast(message: "Request timeout")
                                 }
                             }
+                            
+                            
+                            
                         } catch {
                             print("Error deserializing JSON: \(error.localizedDescription)")
                             DispatchQueue.main.async {
@@ -401,6 +413,10 @@ class ChangeSourceViewController: UIViewController, GCDAsyncSocketDelegate, UITa
         default:
             break
         }
+    }
+    
+    struct CheckFeedbackstatus: Decodable{
+        let status: String!
     }
     
     struct HumanMode: Decodable {

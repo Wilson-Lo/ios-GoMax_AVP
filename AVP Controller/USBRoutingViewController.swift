@@ -196,17 +196,28 @@ class USBRoutingViewController: UIViewController, GCDAsyncSocketDelegate{
                         
                         do {
                             _ = try JSONSerialization.jsonObject(with: self.receiveData.data(using: .utf8)!)
-                            let get_all_list: GetAllList = try! JSONDecoder().decode(GetAllList.self, from: self.receiveData.data(using: .utf8)!)
-                            if(get_all_list.result.devices.count > 0){
-                                for index in get_all_list.result.devices{
-                                    self.deviceList.append(index.device_id)
-                                    print(index.device_id)
+                            
+                            let checkFeedbackStatus:CheckFeedbackstatus  = try! JSONDecoder().decode(CheckFeedbackstatus.self, from: self.receiveData.data(using: .utf8)!)
+                            
+                            if(checkFeedbackStatus.status == "SUCCESS"){
+                                let get_all_list: GetAllList = try! JSONDecoder().decode(GetAllList.self, from: self.receiveData.data(using: .utf8)!)
+                                if(get_all_list.result.devices.count > 0){
+                                    for index in get_all_list.result.devices{
+                                        self.deviceList.append(index.device_id)
+                                        print(index.device_id)
+                                    }
+                                    
+                                    DispatchQueue.main.async {
+                                        self.closeLoading()
+                                    }
                                 }
-                                
+                            }else{
                                 DispatchQueue.main.async {
                                     self.closeLoading()
+                                    self.ShowToast(message: "Request timeout")
                                 }
                             }
+                            
                         } catch {
                             print("Error deserializing JSON: \(error.localizedDescription)")
                             DispatchQueue.main.async {
@@ -337,6 +348,10 @@ class USBRoutingViewController: UIViewController, GCDAsyncSocketDelegate{
         dismiss(animated: false, completion: nil)
     }
     
+    struct CheckFeedbackstatus: Decodable{
+        let status: String!
+    }
+    
     struct HumanMode: Decodable {
         let  status: String
         let  request_id: String!
@@ -438,42 +453,56 @@ class USBRoutingViewController: UIViewController, GCDAsyncSocketDelegate{
                     // print(self.receiveData)
                     do {
                         _ = try JSONSerialization.jsonObject(with: self.receiveData.data(using: .utf8)!)
-                        let device_settings: DeviceSettings = try! JSONDecoder().decode(DeviceSettings.self, from: self.receiveData.data(using: .utf8)!)
                         
-                        for indexNodes in device_settings.result.devices[0].nodes{
+                        let checkFeedbackStatus:CheckFeedbackstatus  = try! JSONDecoder().decode(CheckFeedbackstatus.self, from: self.receiveData.data(using: .utf8)!)
+                        
+                        if(checkFeedbackStatus.status == "SUCCESS"){
+                            let device_settings: DeviceSettings = try! JSONDecoder().decode(DeviceSettings.self, from: self.receiveData.data(using: .utf8)!)
                             
-                            //  print(indexNodes.self.type)
-                            if(indexNodes.self.type == "USB_HID"){
-                                print(indexNodes.configuration.role)
+                            for indexNodes in device_settings.result.devices[0].nodes{
                                 
-                                switch indexNodes.configuration.role{
+                                //  print(indexNodes.self.type)
+                                if(indexNodes.self.type == "USB_HID"){
+                                    print(indexNodes.configuration.role)
                                     
+                                    switch indexNodes.configuration.role{
+                                        
+                                        
+                                    case CmdHelper.usb_role_LOCAL:
+                                        self.segmentedUSBRole.selectedSegmentIndex = 0
+                                        break
+                                        
+                                    case CmdHelper.usb_role_REMOTE:
+                                        self.segmentedUSBRole.selectedSegmentIndex = 1
+                                        break
+                                        
+                                        
+                                    case CmdHelper.usb_role_DISABLED:
+                                        self.segmentedUSBRole.selectedSegmentIndex = 2
+                                        break
+                                        
+                                    default:
+                                        
+                                        break
+                                        
+                                    }
                                     
-                                case CmdHelper.usb_role_LOCAL:
-                                    self.segmentedUSBRole.selectedSegmentIndex = 0
-                                    break
-                                    
-                                case CmdHelper.usb_role_REMOTE:
-                                    self.segmentedUSBRole.selectedSegmentIndex = 1
-                                    break
-                                    
-                                    
-                                case CmdHelper.usb_role_DISABLED:
-                                    self.segmentedUSBRole.selectedSegmentIndex = 2
-                                    break
-                                    
-                                default:
-                                    
-                                    break
-                                    
-                                }
-                                
+                                }}
+                        }else{
+                            DispatchQueue.main.async {
+                                self.view.makeToast("Request timeout")
                             }
-                            
                         }
+                        
+                        
+                        
+                        
                     } catch {
                         
                         print("Error deserializing JSON: \(error.localizedDescription)")
+                        DispatchQueue.main.async {
+                            self.view.makeToast("Request timeout")
+                        }
                         
                     }
                     
