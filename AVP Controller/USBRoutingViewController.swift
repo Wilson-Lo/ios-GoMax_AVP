@@ -33,6 +33,7 @@ class USBRoutingViewController: UIViewController, GCDAsyncSocketDelegate{
     var userSelectedDeviceIndex = -1//recoed user select which device id
     var userSelectedUSBRole = 0
     var segmentedUSBRole: UISegmentedControl!
+    private var checkConnectStatusWork: DispatchWorkItem?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,12 +47,20 @@ class USBRoutingViewController: UIViewController, GCDAsyncSocketDelegate{
     
     override func viewWillAppear(_ animated: Bool) {
         print("USBRoutingViewController-viewDidAppear")
+        self.checkConnectStatusWork  = DispatchWorkItem(block: {
+                   if(!self.isConnected){
+                       self.closeLoading()
+                       DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                           self.view.makeToast("Request timeout !", duration: 2.0, position: .bottom)
+                       }
+                   }
+               })
         self.userSelectedDeviceIndex = -1
         self.userSelectedUSBRole = 0
         self.bt_device_id.setTitle("Select Device", for: .init())
         self.queueTCP = DispatchQueue(label: "com.gofanco.tcp", qos: DispatchQoS.userInitiated)
         if(preferences.value(forKey: key_server_ip) != nil){
-            var fullIP = preferences.value(forKey: key_server_ip) as! String
+            let fullIP = preferences.value(forKey: key_server_ip) as! String
             self.queueTCP.async {
                 DispatchQueue.main.async {
                     self.showLoading()
@@ -64,17 +73,11 @@ class USBRoutingViewController: UIViewController, GCDAsyncSocketDelegate{
                     try self.mSocket.connect(toHost: fullIP, onPort: 6970)
                     
                     print("connect to device success")
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                        if(!self.isConnected){
-                            self.closeLoading()
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                self.view.makeToast("Request timeout !", duration: 3.0, position: .bottom)
-                            }
-                        }
-                    }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: self.checkConnectStatusWork!)
                     
                 } catch let error {
                     print("error to connect device")
+                     DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: self.checkConnectStatusWork!)
                 }
                 
                 
@@ -83,6 +86,19 @@ class USBRoutingViewController: UIViewController, GCDAsyncSocketDelegate{
         
     }
     
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        print("USBRoutingViewController-viewDidDisappear")
+        
+        queueTCP.async {
+              self.checkConnectStatusWork?.cancel()
+            self.receiveData = ""
+            if(self.mSocket != nil){
+                self.mSocket.disconnect()
+                self.mSocket = nil
+            }
+        }
+    }
     
     @objc func USBRoleChanged(_ sender: UISegmentedControl){
         print(sender.selectedSegmentIndex)

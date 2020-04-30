@@ -43,7 +43,7 @@ class DisplayWallViewController:UIViewController, GCDAsyncSocketDelegate{
     var bt_h: UIButton!
     var bt_v: UIButton!
     var bt_number: UIButton!
-    
+    private var checkConnectStatusWork: DispatchWorkItem?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -60,7 +60,15 @@ class DisplayWallViewController:UIViewController, GCDAsyncSocketDelegate{
     
     
     override func viewWillAppear(_ animated: Bool) {
-        print("USBRoutingViewController-viewDidAppear")
+        print("DisplayWallViewController-viewDidAppear")
+        self.checkConnectStatusWork  = DispatchWorkItem(block: {
+            if(!self.isConnected){
+                self.closeLoading()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    self.view.makeToast("Request timeout !", duration: 2.0, position: .bottom)
+                }
+            }
+        })
         self.userSelectedDeviceIndex = -1
         self.userSelectedHCut = 1
         self.userSelectedVCut = 1
@@ -70,7 +78,7 @@ class DisplayWallViewController:UIViewController, GCDAsyncSocketDelegate{
         self.bt_v.setTitle("1", for: .init())
         self.queueTCP = DispatchQueue(label: "com.gofanco.tcp", qos: DispatchQoS.userInitiated)
         if(preferences.value(forKey: key_server_ip) != nil){
-            var fullIP = preferences.value(forKey: key_server_ip) as! String
+            let fullIP = preferences.value(forKey: key_server_ip) as! String
             self.queueTCP.async {
                 DispatchQueue.main.async {
                     self.showLoading()
@@ -83,17 +91,11 @@ class DisplayWallViewController:UIViewController, GCDAsyncSocketDelegate{
                     try self.mSocket.connect(toHost: fullIP, onPort: 6970)
                     
                     print("connect to device success")
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                        if(!self.isConnected){
-                            self.closeLoading()
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                self.view.makeToast("Request timeout !", duration: 3.0, position: .bottom)
-                            }
-                        }
-                    }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: self.checkConnectStatusWork!)
                     
                 } catch let error {
                     print("error to connect device")
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: self.checkConnectStatusWork!)
                 }
                 
                 
@@ -103,17 +105,28 @@ class DisplayWallViewController:UIViewController, GCDAsyncSocketDelegate{
     }
     
     
-    
+    override func viewDidDisappear(_ animated: Bool) {
+        print("DisplayWallViewController-viewDidDisappear")
+        
+        queueTCP.async {
+            self.checkConnectStatusWork?.cancel()
+            self.receiveData = ""
+            if(self.mSocket != nil){
+                self.mSocket.disconnect()
+                self.mSocket = nil
+            }
+        }
+    }
     
     
     func socketDidDisconnect(_ sock: GCDAsyncSocket, withError err: Error?) {
-        print("USBRoutingViewController-socketDidDisconnect")
+        print("DisplayWallViewController-socketDidDisconnect")
         self.isConnected = false
     }
     
     
     func socket(_ sock: GCDAsyncSocket, didConnectToHost host: String, port: UInt16) {
-        print("USBRoutingViewController-didConnectToHost")
+        print("DisplayWallViewController-didConnectToHost")
         self.isConnected = true
         self.queueTCP.asyncAfter(deadline: .now() + 0.5) {
             print("send command")
@@ -124,7 +137,7 @@ class DisplayWallViewController:UIViewController, GCDAsyncSocketDelegate{
     }
     
     public func socket(_ sock: GCDAsyncSocket, didRead: Data, withTag tag:CLong){
-        print("USBRoutingViewController-didRead")
+        print("DisplayWallViewController-didRead")
         
         switch self.currentCmdNumber {
             
@@ -174,7 +187,6 @@ class DisplayWallViewController:UIViewController, GCDAsyncSocketDelegate{
                     self.receiveData = ""
                     DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
                         self.isLockRead = false
-                        
                         do {
                             _ = try JSONSerialization.jsonObject(with: self.receiveData.data(using: .utf8)!)
                             let checkFeedbackStatus:CheckFeedbackstatus  = try! JSONDecoder().decode(CheckFeedbackstatus.self, from: self.receiveData.data(using: .utf8)!)
@@ -184,7 +196,6 @@ class DisplayWallViewController:UIViewController, GCDAsyncSocketDelegate{
                                 if(get_all_list.result.devices.count > 0){
                                     for index in get_all_list.result.devices{
                                         self.deviceList.append(index.device_id)
-                                        print(index.device_id)
                                     }
                                     
                                     DispatchQueue.main.async {
@@ -307,7 +318,6 @@ class DisplayWallViewController:UIViewController, GCDAsyncSocketDelegate{
             }else if(status.status == "SUCCESS"){
                 
                 let error_message : Error = try! JSONDecoder().decode(Error.self, from: didRead)
-                print("change error " + String(error_message.result.error.count))
                 DispatchQueue.main.async {
                     self.view.makeToast("Send failed: " + error_message.result.error[0].message, duration: 2.0, position: .bottom)
                 }
@@ -454,7 +464,6 @@ class DisplayWallViewController:UIViewController, GCDAsyncSocketDelegate{
                 DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
                     self.closeLoading()
                     self.isLockRead = false
-                    // print(self.receiveData)
                     do {
                         _ = try JSONSerialization.jsonObject(with: self.receiveData.data(using: .utf8)!)
                         
@@ -478,6 +487,9 @@ class DisplayWallViewController:UIViewController, GCDAsyncSocketDelegate{
                         }else{
                             DispatchQueue.main.async {
                                 self.view.makeToast("Request timeout")
+                                self.label_resolution.text = "0 * 0"
+                                self.source_width = 0
+                                self.source_height = 0
                             }
                             
                         }
@@ -488,6 +500,9 @@ class DisplayWallViewController:UIViewController, GCDAsyncSocketDelegate{
                         print("Error deserializing JSON: \(error.localizedDescription)")
                         DispatchQueue.main.async {
                             self.view.makeToast("Request timeout")
+                            self.label_resolution.text = "0 * 0"
+                            self.source_width = 0
+                            self.source_height = 0
                         }
                     }
                     

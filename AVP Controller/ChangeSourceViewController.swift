@@ -72,8 +72,8 @@ class ChangeSourceViewController: UIViewController, GCDAsyncSocketDelegate, UITa
         self.tableDeviceList.reloadData()
         self.receiveData = ""
         if(preferences.value(forKey: key_server_ip) != nil){
-            var fullIP = preferences.value(forKey: key_server_ip) as! String
-            queueTCP.async {
+            let fullIP = preferences.value(forKey: key_server_ip) as! String
+            self.queueTCP.async {
                 DispatchQueue.main.async {
                     self.showLoading()
                 }
@@ -101,6 +101,7 @@ class ChangeSourceViewController: UIViewController, GCDAsyncSocketDelegate, UITa
         print("ChangeSourceViewController-viewDidDisappear")
         self.checkConnectStatusWork?.cancel()
         queueTCP.async {
+            self.checkConnectStatusWork?.cancel()
             if(self.mSocket != nil){
                 self.mSocket.disconnect()
                 self.mSocket = nil

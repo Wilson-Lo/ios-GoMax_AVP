@@ -57,9 +57,9 @@ class DeviceListViewController: UIViewController, GCDAsyncSocketDelegate, UITabl
         self.tableDeviceList.reloadData()
         self.queueTCP = DispatchQueue(label: "com.gofanco.tcp", qos: DispatchQoS.userInitiated)
         if(preferences.value(forKey: key_server_ip) != nil){
-            var fullIP = preferences.value(forKey: key_server_ip) as! String
+            let fullIP = preferences.value(forKey: key_server_ip) as! String
             print("ip = " + fullIP)
-            queueTCP.async {
+            self.queueTCP.async {
                 DispatchQueue.main.async {
                     self.showLoading()
                 }
@@ -90,7 +90,9 @@ class DeviceListViewController: UIViewController, GCDAsyncSocketDelegate, UITabl
     override func viewDidDisappear(_ animated: Bool) {
         print("DeviceListViewController-viewDidDisappear")
         queueTCP.async {
+              self.checkConnectStatusWork?.cancel()
             if(self.mSocket != nil){
+                self.receiveData = ""
                 self.mSocket.disconnect()
                 self.mSocket = nil
             }
@@ -285,11 +287,13 @@ class DeviceListViewController: UIViewController, GCDAsyncSocketDelegate, UITabl
                 self.closeLoading()
                 self.isLockRead = false
                 var strDeviceInfo: String = ""
+                print("1: "+self.receiveData)
                 do {
                     _ = try JSONSerialization.jsonObject(with: self.receiveData.data(using: .utf8)!)
                     let checkFeedbackStatus:CheckFeedbackstatus  = try! JSONDecoder().decode(CheckFeedbackstatus.self, from: self.receiveData.data(using: .utf8)!)
                     
                     if(checkFeedbackStatus.status == "SUCCESS"){
+                        print("2: "+self.receiveData)
                         let device_info: DeviceInfo = try! JSONDecoder().decode(DeviceInfo.self, from: self.receiveData.data(using: .utf8)!)
                         if(device_info.result.devices.count > 0){
                             strDeviceInfo.append(device_info.result.devices[0].identity.chipset_type + " (Chipset)\n")

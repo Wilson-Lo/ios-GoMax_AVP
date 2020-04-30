@@ -38,6 +38,7 @@ class I2SAudioViewController: UIViewController, GCDAsyncSocketDelegate{
     var menu: RSSelectionMenu<String>!
     var userSelectedDeviceIndex = -1//recoed user select which device id
     var userSelectedI2SAudioOutputIndex = 0
+    private var checkConnectStatusWork: DispatchWorkItem?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,6 +53,14 @@ class I2SAudioViewController: UIViewController, GCDAsyncSocketDelegate{
     
     override func viewWillAppear(_ animated: Bool) {
         print("I2SAudioViewController-viewDidAppear")
+        self.checkConnectStatusWork  = DispatchWorkItem(block: {
+            if(!self.isConnected){
+                self.closeLoading()
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                    self.view.makeToast("Request timeout !", duration: 2.0, position: .bottom)
+                }
+            }
+        })
         self.userSelectedDeviceIndex = -1
         self.userSelectedI2SAudioOutputIndex = 0
         self.bt_device_id.setTitle("Select Device", for: .init())
@@ -59,7 +68,7 @@ class I2SAudioViewController: UIViewController, GCDAsyncSocketDelegate{
         self.bt_i2s_output.setTitle(CmdHelper.i2s_audio_array[0], for: .init())
         self.queueTCP = DispatchQueue(label: "com.gofanco.tcp", qos: DispatchQoS.userInitiated)
         if(preferences.value(forKey: key_server_ip) != nil){
-            var fullIP = preferences.value(forKey: key_server_ip) as! String
+            let fullIP = preferences.value(forKey: key_server_ip) as! String
             self.queueTCP.async {
                 DispatchQueue.main.async {
                     self.showLoading()
@@ -72,17 +81,11 @@ class I2SAudioViewController: UIViewController, GCDAsyncSocketDelegate{
                     try self.mSocket.connect(toHost: fullIP, onPort: 6970)
                     
                     print("connect to device success")
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                        if(!self.isConnected){
-                            self.closeLoading()
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                self.view.makeToast("Request timeout !", duration: 3.0, position: .bottom)
-                            }
-                        }
-                    }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: self.checkConnectStatusWork!)
                     
                 } catch let error {
                     print("error to connect device")
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: self.checkConnectStatusWork!)
                 }
                 
                 
@@ -91,10 +94,21 @@ class I2SAudioViewController: UIViewController, GCDAsyncSocketDelegate{
         
     }
     
-    
+    override func viewDidDisappear(_ animated: Bool) {
+        print("I2SAudioViewController-viewDidDisappear")
+        
+        queueTCP.async {
+              self.checkConnectStatusWork?.cancel()
+            self.receiveData = ""
+            if(self.mSocket != nil){
+                self.mSocket.disconnect()
+                self.mSocket = nil
+            }
+        }
+    }
     
     func socketDidDisconnect(_ sock: GCDAsyncSocket, withError err: Error?) {
-        print("ChangeSourceViewController-socketDidDisconnect")
+        print("I2SAudioViewController-socketDidDisconnect")
         self.isConnected = false
     }
     
@@ -173,7 +187,6 @@ class I2SAudioViewController: UIViewController, GCDAsyncSocketDelegate{
                                 if(get_all_list.result.devices.count > 0){
                                     for index in get_all_list.result.devices{
                                         self.deviceList.append(index.device_id)
-                                        print(index.device_id)
                                     }
                                     
                                     DispatchQueue.main.async {

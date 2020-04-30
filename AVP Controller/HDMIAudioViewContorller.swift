@@ -38,6 +38,7 @@ class HDMIAudioViewContorller: UIViewController, GCDAsyncSocketDelegate{
     var bt_device_id: UIButton!
     var userSelectedDeviceIndex = -1//recoed user select which device id
     var userSelectedHDMIAudioOutputIndex = 0
+    private var checkConnectStatusWork: DispatchWorkItem?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,6 +52,14 @@ class HDMIAudioViewContorller: UIViewController, GCDAsyncSocketDelegate{
     
     override func viewDidAppear(_ animated: Bool) {
         print("HDMIAudioViewContorller-viewDidAppear")
+        self.checkConnectStatusWork  = DispatchWorkItem(block: {
+                   if(!self.isConnected){
+                       self.closeLoading()
+                       DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                           self.view.makeToast("Request timeout !", duration: 2.0, position: .bottom)
+                       }
+                   }
+        })
         self.bt_hdmi_output.setTitle(CmdHelper.hdmi_audio_array[0], for: .init())
         self.userSelectedDeviceIndex = -1
         self.userSelectedHDMIAudioOutputIndex = 0
@@ -76,17 +85,11 @@ class HDMIAudioViewContorller: UIViewController, GCDAsyncSocketDelegate{
                     
                     
                     print("connect to device success")
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                        if(!self.isConnected){
-                            self.closeLoading()
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                                self.view.makeToast("Request timeout !", duration: 3.0, position: .bottom)
-                            }
-                        }
-                    }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: self.checkConnectStatusWork!)
                     
                 } catch let error {
                     print("error to connect device")
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: self.checkConnectStatusWork!)
                 }
                 
                 
@@ -99,7 +102,8 @@ class HDMIAudioViewContorller: UIViewController, GCDAsyncSocketDelegate{
         print("HDMIAudioViewContorller-viewDidDisappear")
         queueTCP.async {
             if( self.mSocket != nil){
-                
+                  self.checkConnectStatusWork?.cancel()
+                self.receiveData = ""
                 self.mSocket.disconnect()
                 self.mSocket = nil
             }
@@ -316,6 +320,7 @@ class HDMIAudioViewContorller: UIViewController, GCDAsyncSocketDelegate{
         
     }
     
+    
     //handler server feedback (processing)
     private func feedBackUser(didRead: Data){
         
@@ -528,8 +533,8 @@ class HDMIAudioViewContorller: UIViewController, GCDAsyncSocketDelegate{
                                 }
                             }else{
                                 DispatchQueue.main.async {
-                                                               self.view.makeToast("Request timeout")
-                                                           }
+                                    self.view.makeToast("Request timeout")
+                                }
                             }
                             
                             
